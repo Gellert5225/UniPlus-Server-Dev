@@ -51,5 +51,4 @@ Parse.Cloud.define("likePost", function(request, response){
         }, useMasterKey: true});
 
         response.success('success');
-    })
-}
+    });
