@@ -30,3 +30,26 @@ Parse.Cloud.define("iosPushTest", function(request, response) {
 
   response.success('success');
 });
+
+//like action
+Parse.Cloud.define("likePost", function(request, response){
+    var author  = request.params.author;
+    var message = request.params.message;
+    
+    var pushQuery = new Parse.Query(Parse.Installation);
+    pushQuery.equalTo("user", author);
+    
+    Parse.Push.send({
+        where: pushQuery,
+        data: {
+            alert: message
+        }
+    },{ success: function() {
+            console.log("#### PUSH OK");
+        }, error: function(error) {
+            console.log("#### PUSH ERROR" + error.message);
+        }, useMasterKey: true});
+
+        response.success('success');
+    })
+}
