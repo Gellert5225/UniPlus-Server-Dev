@@ -40,7 +40,7 @@ Parse.Cloud.define("likePost", function(request, response){
     query.equalTo('username', author);
     
     var pushQuery = new Parse.Query(Parse.Installation);
-    pushQuery.equals("user", author);
+    pushQuery.matchesQuery("user", query);
     
     Parse.Push.send({
         where: pushQuery,
