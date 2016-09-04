@@ -16,7 +16,7 @@ var api = new ParseServer({
   cloud       : process.env.CLOUD_CODE_MAIN || './cloud/main.js',
   appId       : process.env.APP_ID || '7ylQv7jkyHd0KCh1pXYBLUIElX6aoeqVTaucbakK',
   masterKey   : process.env.MASTER_KEY || 'IdMgi48kYB82MZrCl6JRLH97myovJxGyJ09bLuII', //Add your master key here. Keep it secret!
-  fileKey     : process.env.FILE_KEY || '42c04870-7631-4107-810f-ca4829fce9d', // Add the file key to provide access to files already hosted on Parse
+  fileKey     : process.env.FILE_KEY || '42c04870-7631-4107-810f-ca4829fce9d0', // Add the file key to provide access to files already hosted on Parse
   serverURL   : process.env.SERVER_URL || 'http://shutteradio.herokuapp.com/parse',  // Don't forget to change to https if needed
   liveQuery   : {
         classNames: ["Posts", "Comments"] // List of classes to support for query subscriptions
