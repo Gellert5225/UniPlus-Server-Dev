@@ -12,12 +12,12 @@ var path        = require('path');
 //}
 
 var api = new ParseServer({
-  databaseURI : 'mongodb://gellert:5917738ljh@ds031975.mlab.com:31975/shutteradio',
+  databaseURI : 'mongodb://gellert:5917738ljh@ds031975.mlab.com:31975/uniplus',
   cloud       : process.env.CLOUD_CODE_MAIN || './cloud/main.js',
-  appId       : process.env.APP_ID || '7ylQv7jkyHd0KCh1pXYBLUIElX6aoeqVTaucbakK',
-  masterKey   : process.env.MASTER_KEY || 'IdMgi48kYB82MZrCl6JRLH97myovJxGyJ09bLuII', //Add your master key here. Keep it secret!
-  fileKey     : process.env.FILE_KEY || '42c04870-7631-4107-810f-ca4829fce9d0', // Add the file key to provide access to files already hosted on Parse
-  serverURL   : process.env.SERVER_URL || 'http://shutteradio.herokuapp.com/parse',  // Don't forget to change to https if needed
+  appId       : process.env.APP_ID || 'ycUcZbElpxaa0UbV5wUGpGvjaj2wIbauRCyJFUyG',
+  masterKey   : process.env.MASTER_KEY || 'OxPlldKK0wVIjVDJgZxTGrXA1PzhJaXu7u4P2dik', //Add your master key here. Keep it secret!
+  fileKey     : process.env.FILE_KEY || 'cfdb4ad8-6c05-4ef7-b4c2-4aad24fcd65c', // Add the file key to provide access to files already hosted on Parse
+  serverURL   : process.env.SERVER_URL || 'http://uniplusserver.herokuapp.com/parse',  // Don't forget to change to https if needed
   liveQuery   : {
         classNames: ["Posts", "Comments"] // List of classes to support for query subscriptions
     },
