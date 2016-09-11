@@ -12,11 +12,11 @@ var path        = require('path');
 //}
 
 var api = new ParseServer({
-  databaseURI : 'mongodb://gellert:5917738ljh@ds031975.mlab.com:31975/uniplus',
+  databaseURI : 'mongodb://gellert:5917738ljh@ds029446.mlab.com:29446/uniplusdev',
   cloud       : process.env.CLOUD_CODE_MAIN || './cloud/main.js',
-  appId       : process.env.APP_ID || 'ycUcZbElpxaa0UbV5wUGpGvjaj2wIbauRCyJFUyG',
-  masterKey   : process.env.MASTER_KEY || 'OxPlldKK0wVIjVDJgZxTGrXA1PzhJaXu7u4P2dik', //Add your master key here. Keep it secret!
-  fileKey     : process.env.FILE_KEY || 'cfdb4ad8-6c05-4ef7-b4c2-4aad24fcd65c', // Add the file key to provide access to files already hosted on Parse
+  appId       : process.env.APP_ID || 'Zj9b976AHw3b7SkOgCKzaEjB7bjJoPh2XcyxTcgU',
+  masterKey   : process.env.MASTER_KEY || 'T5DQ2mT8LNAp0Enn9Y3ERU0iY93sT06PctF6Dt4g', //Add your master key here. Keep it secret!
+  fileKey     : process.env.FILE_KEY || '4c095515-1d61-492f-80ae-d4a299e69327', // Add the file key to provide access to files already hosted on Parse
   serverURL   : process.env.SERVER_URL || 'http://uniplusserver.herokuapp.com/parse',  // Don't forget to change to https if needed
   liveQuery   : {
         classNames: ["Posts", "Comments"] // List of classes to support for query subscriptions
