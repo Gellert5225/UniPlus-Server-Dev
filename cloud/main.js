@@ -79,10 +79,10 @@ Parse.Cloud.define("followUser", function(request, response){
 
 //increment user reputation
 Parse.Cloud.define("changeReputation", function(request, response) {
-    var userId = request.params.userId,
+    var userId = request.params.userId;
     var repChange = request.params.repChange;
 
-    var User = Parse.Object.extend("_User"),
+    var User = Parse.Object.extend("_User");
     var user = new User({ objectId: userId });
 
     user.increment("reputation", repChange);
