@@ -76,3 +76,21 @@ Parse.Cloud.define("followUser", function(request, response){
 
         response.success('success');
 });
+
+//increment user reputation
+Parse.Cloud.define('changeReputation', function(request, response) {
+    var userId = request.params.userId,
+    var repChange = request.params.repChange;
+
+    var User = Parse.Object.extend('_User'),
+    var user = new User({ objectId: userId });
+
+    user.increment('reputation', repChange);
+
+    Parse.Cloud.useMasterKey();
+    user.save().then(function(user) {
+        response.success(user);
+    }, function(error) {
+        response.error(error)
+    });
+});
