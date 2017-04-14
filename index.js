@@ -24,8 +24,8 @@ var api = new ParseServer({
   push        : {
                 ios: [
                   {
-                    pfx        : './Cert/ShutteradioPushCert.p12', // Dev PFX or P12
-                    bundleId   : 'com.Quicky.Shutteradio',
+                    pfx        : './Cert/UniPlusPush.p12', // Dev PFX or P12
+                    bundleId   : 'com.JiaheLi.UniPlus',
                     production : false,
                     //adaptor    : ParsePushAdapter
                   },
