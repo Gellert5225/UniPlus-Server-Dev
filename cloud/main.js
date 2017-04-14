@@ -2,7 +2,7 @@ Parse.Cloud.define('hello', function(req, res) {
   res.success('Hi');
 });
 
-Parse.Cloud.define("testPush", function(req, res) {
+Parse.Cloud.define("testPush", function(request, response) {
     var user = request.parame.user;
 
     var query = new Parse.Query(Parse.User);
