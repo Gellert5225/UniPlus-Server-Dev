@@ -4,7 +4,7 @@ Parse.Cloud.define('hello', function(req, res) {
 
 Parse.Cloud.define("testPush", function(request, response) {
     Parse.Cloud.useMasterKey();
-    
+
     var username = request.params.user;
 
     var query = new Parse.Query(Parse.User);
@@ -14,7 +14,9 @@ Parse.Cloud.define("testPush", function(request, response) {
     pushQuery.matchesQuery("user", query);
 
     Parse.Push.send({
-        where: pushQuery,
+        where:{
+            "deviceType": { "$in": [ "ios",  "android"  ]}
+        } ,
         data: {
             alert: "This is a test push"
         }
