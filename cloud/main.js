@@ -3,10 +3,10 @@ Parse.Cloud.define('hello', function(req, res) {
 });
 
 Parse.Cloud.define("testPush", function(request, response) {
-    var user = request.param.user;
+    var username = request.param.user;
 
     var query = new Parse.Query(Parse.User);
-    query.equalTo('username', user);
+    query.equalTo('username', username);
 
     var pushQuery = new Parse.Query(Parse.Installation);
     pushQuery.matchesQuery("user", query);
