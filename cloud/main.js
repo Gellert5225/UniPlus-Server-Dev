@@ -14,19 +14,19 @@ Parse.Cloud.define("testPush", function(request, response) {
     pushQuery.matchesQuery("user", query);
 
     Parse.Push.send({
-        where:{
-            "deviceType": { "$in": [ "ios",  "android"  ]}
-        } ,
+        where: pushQuery,
         data: {
             alert: "This is a test push"
         }
     }, {
         success: function() {
             // Push was successful
+            console.log("#### PUSH OK");
         },
         error: function(error) {
             // Handle error
-        }
+            console.log("#### PUSH ERROR" + error.message);
+        },useMasterKey:true
     });
 });
 
