@@ -2,29 +2,28 @@ Parse.Cloud.define('hello', function(req, res) {
   res.success('Hi');
 });
 
-//like action
-Parse.Cloud.define("likePost", function(request, response){
-    var author  = request.params.author;
-    var message = request.params.message;
-    
+Parse.Cloud.define("testPush", function(req, res) {
+    var user = request.parame.user;
+
     var query = new Parse.Query(Parse.User);
-    query.equalTo('username', author);
-    
+    query.equalTo('username', user);
+
     var pushQuery = new Parse.Query(Parse.Installation);
     pushQuery.matchesQuery("user", query);
-    
+
     Parse.Push.send({
         where: pushQuery,
         data: {
-            alert: message
+            alert: "This is a test push"
         }
-    },{ success: function() {
-            console.log("#### PUSH OK");
-        }, error: function(error) {
-            console.log("#### PUSH ERROR" + error.message);
-        }, useMasterKey: true});
-
-        response.success('success');
+    }, {
+        success: function() {
+            // Push was successful
+        },
+        error: function(error) {
+            // Handle error
+        }
+    });
 });
 
 //comment action
