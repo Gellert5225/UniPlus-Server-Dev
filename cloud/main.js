@@ -3,6 +3,8 @@ Parse.Cloud.define('hello', function(req, res) {
 });
 
 Parse.Cloud.define("testPush", function(request, response) {
+    Parse.Cloud.useMasterKey();
+    
     var username = request.params.user;
 
     var query = new Parse.Query(Parse.User);
