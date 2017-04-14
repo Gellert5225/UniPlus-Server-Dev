@@ -26,13 +26,13 @@ var api = new ParseServer({
                   {
                     pfx        : './Cert/UniPlusPush.p12', // Dev PFX or P12
                     bundleId   : 'com.JiaheLi.UniPlus',
-                    production : false,
+                    production : false
                     //adaptor    : ParsePushAdapter
                   },
                   {
                     pfx        : './Cert/ShutteradioProductionPush.p12', // Prod PFX or P12
                     bundleId   : 'com.Quicky.Shutteradio',  
-                    production : true, // Prod
+                    production : true // Prod
                     //adaptor    : ParsePushAdapter
                   }
                 ]
