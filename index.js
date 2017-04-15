@@ -17,7 +17,7 @@ var api = new ParseServer({
   appId       : process.env.APP_ID || 'Zj9b976AHw3b7SkOgCKzaEjB7bjJoPh2XcyxTcgU',
   masterKey   : process.env.MASTER_KEY || 'T5DQ2mT8LNAp0Enn9Y3ERU0iY93sT06PctF6Dt4g', //Add your master key here. Keep it secret!
   fileKey     : process.env.FILE_KEY || '4c095515-1d61-492f-80ae-d4a299e69327', // Add the file key to provide access to files already hosted on Parse
-  serverURL   : process.env.SERVER_URL || 'http://uniplusserver.herokuapp.com/parse',  // Don't forget to change to https if needed
+  serverURL   : process.env.SERVER_URL || 'http://uniplusdevserver.herokuapp.com/parse',  // Don't forget to change to https if needed
   liveQuery   : {
         classNames: ["Posts", "Comments"] // List of classes to support for query subscriptions
     },
