@@ -4,10 +4,7 @@ Parse.Cloud.define('hello', function(req, res) {
 
 Parse.Cloud.define("testPush", function(request, response) {
     Parse.Cloud.useMasterKey();
-
     var username = request.params.user;
-
-
     var query = new Parse.Query(Parse.User);
     query.equalTo('username', username);
 
@@ -17,7 +14,7 @@ Parse.Cloud.define("testPush", function(request, response) {
     Parse.Push.send({
         where: pushQuery,
         data: {
-            alert: "This is a test push"
+            alert: "This is a test push to test localhost"
         }
     }, {
         success: function() {
@@ -49,4 +46,35 @@ Parse.Cloud.define("changeReputation", function(request, response) {
     }, function(error) {
         response.error(error)
     });
+});
+
+Parse.Cloud.define("commentNotification", function(request, response) {
+    Parse.Cloud.useMasterKey();
+    var targetUser = request.params.targetUser;
+    var message = request.params.message;
+
+    var userQuery = new Parse.Query(Parse.User);
+    userQuery.equalTo("objectId", targetUser);
+
+    var pushQuery = new Parse.Query(Parse.Installation);
+    pushQuery.matchesQuery("user", userQuery);
+    
+    console.log("sending notification");
+    Parse.Push.send({
+        where: pushQuery,
+        data: {
+            alert: message
+        }
+    }, {
+        success: function() {
+            // Push was successful
+            console.log("#### PUSH OK");
+        },
+        error: function(error) {
+            // Handle error
+            console.log("#### PUSH ERROR" + error.message);
+        },useMasterKey:true
+    });
+    response.success('success');
+
 });
