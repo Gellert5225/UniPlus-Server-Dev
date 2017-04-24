@@ -29,6 +29,30 @@ Parse.Cloud.define("testPush", function(request, response) {
     response.success('success');
 });
 
+Parse.Cloud.define("testPushToCurrentUser", function(request, response) {
+    Parse.Cloud.useMasterKey();
+
+    var query = new Parse.Query(Parse.Installation);
+    query.equalTo('user', request.user);
+
+    Parse.Push.send({
+        where: query,
+        data: {
+            alert: "This is a test push to test currentUser"
+        }
+    }, {
+        success: function() {
+            // Push was successful
+            console.log("#### PUSH OK");
+        },
+        error: function(error) {
+            // Handle error
+            console.log("#### PUSH ERROR" + error.message);
+        },useMasterKey:true
+    });
+    response.success('success');
+});
+
 //increment user reputation
 Parse.Cloud.define("changeReputation", function(request, response) {
     var userId = request.params.userId;
@@ -52,7 +76,7 @@ Parse.Cloud.define("commentNotification", function(request, response) {
     Parse.Cloud.useMasterKey();
     var targetUser = request.params.targetUser;
     var message = request.params.message;
-
+    
     var userQuery = new Parse.Query(Parse.User);
     userQuery.equalTo("objectId", targetUser);
 
@@ -77,4 +101,10 @@ Parse.Cloud.define("commentNotification", function(request, response) {
     });
     response.success('success');
 
+});
+
+Parse.Cloud.define("upVote", function(request, response) {
+    Parse.Cloud.useMasterKey();
+
+    
 });
