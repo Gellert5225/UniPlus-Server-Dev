@@ -83,28 +83,45 @@ Parse.Cloud.define("commentNotification", function(request, response) {
     var pushQuery = new Parse.Query(Parse.Installation);
     pushQuery.matchesQuery("user", userQuery);
     
-    console.log("sending notification");
-    Parse.Push.send({
-        where: pushQuery,
-        data: {
-            alert: message
-        }
-    }, {
-        success: function() {
-            // Push was successful
-            console.log("#### PUSH OK");
-        },
-        error: function(error) {
-            // Handle error
-            console.log("#### PUSH ERROR" + error.message);
-        },useMasterKey:true
-    });
-    response.success('success');
-
+    if (request.user.id !== targetUser) {
+        Parse.Push.send({
+            where: pushQuery,
+            data: {
+                alert: message
+            }
+        }, {
+            success: function() {
+                // Push was successful
+                console.log("#### PUSH OK");
+            },
+            error: function(error) {
+                // Handle error
+                console.log("#### PUSH ERROR" + error.message);
+            },useMasterKey:true
+        });
+        response.success('success');
+    } else {
+        response.success('will not send push');
+    }
 });
 
-Parse.Cloud.define("upVote", function(request, response) {
-    Parse.Cloud.useMasterKey();
+// Parse.Cloud.define("upVote", function(request, response) {
+//     Parse.Cloud.useMasterKey();
 
     
-});
+// });
+
+// Parse.Cloud.define("setCorrectAnswer", function(request, response) {
+//     var correctID = request.params.answerID;
+
+//     var answerQuery = new Parse.Query(Parse.Answers);
+//     query.get(correctID, {
+//         success: function(gameScore) {
+//             // The object was retrieved successfully.
+
+//         },
+//         error: function(object, error) {
+            
+//         }
+//     });
+// });
