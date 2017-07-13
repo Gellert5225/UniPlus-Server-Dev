@@ -19,11 +19,11 @@ Parse.Cloud.define("testPush", function(request, response) {
     }, {
         success: function() {
             // Push was successful
-            console.log("#### PUSH OK");
+            //console.log("#### PUSH OK");
         },
         error: function(error) {
             // Handle error
-            console.log("#### PUSH ERROR" + error.message);
+            //console.log("#### PUSH ERROR" + error.message);
         },useMasterKey:true
     });
     response.success('success');
@@ -43,11 +43,11 @@ Parse.Cloud.define("testPushToCurrentUser", function(request, response) {
     }, {
         success: function() {
             // Push was successful
-            console.log("#### PUSH OK");
+            //console.log("#### PUSH OK");
         },
         error: function(error) {
             // Handle error
-            console.log("#### PUSH ERROR" + error.message);
+            //console.log("#### PUSH ERROR" + error.message);
         },useMasterKey:true
     });
     response.success('success');
@@ -65,7 +65,7 @@ Parse.Cloud.define("changeReputation", function(request, response) {
 
     Parse.Cloud.useMasterKey();
     user.save().then(function(user) {
-        console.log("Hooray");
+        //console.log("Hooray");
         response.success(user);
     }, function(error) {
         response.error(error)
@@ -92,17 +92,40 @@ Parse.Cloud.define("commentNotification", function(request, response) {
         }, {
             success: function() {
                 // Push was successful
-                console.log("#### PUSH OK");
+                //console.log("#### PUSH OK");
             },
             error: function(error) {
                 // Handle error
-                console.log("#### PUSH ERROR" + error.message);
+                //console.log("#### PUSH ERROR" + error.message);
             },useMasterKey:true
         });
         response.success('success');
     } else {
         response.success('will not send push');
     }
+});
+
+Parse.Cloud.define("postReportMessage", function(request, response) {
+    var Report = Parse.Object.extend("Report");
+    var report = new Report();
+
+    report.set("message", request.params.message);
+    if (request.params.reportObjectType == 0) { //question
+        report.set("toQuestion", request.params.reportObjectId);
+    } else if (request.params.reportObjectType == 1) {
+        report.set("toAnswer", request.params.reportObjectId);
+    }
+
+    report.set("fromUser", request.params.fromUserId);
+
+    report.save(null, {
+        success:function(report) {
+            //console.log("Success! " + report.id);
+        },
+        error:function(report, error) {
+            //console.log("did not save");
+        }
+    });
 });
 
 // Parse.Cloud.define("upVote", function(request, response) {
