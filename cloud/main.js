@@ -128,6 +128,18 @@ Parse.Cloud.define("postReportMessage", function(request, response) {
     });
 });
 
+Parse.Cloud.define("deleteQuestionFeed", function(request, response) {
+    var query = new Parse.Query("Questions");
+    query.equalTo("toQuestionID", request.params.questionId);
+    query.limit = 1000;
+    query.find({
+        success: function(results) {
+            console.log("delete all");
+            Parse.Object.destroyAll(results);
+        }
+    });
+});
+
 // Parse.Cloud.define("upVote", function(request, response) {
 //     Parse.Cloud.useMasterKey();
 
