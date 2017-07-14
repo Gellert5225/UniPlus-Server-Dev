@@ -114,6 +114,8 @@ Parse.Cloud.define("postReportMessage", function(request, response) {
         report.set("toQuestion", request.params.reportObjectId);
     } else if (request.params.reportObjectType == 1) {
         report.set("toAnswer", request.params.reportObjectId);
+    } else {
+        report.set("toUserId", request.params.reportObjectId);
     }
 
     report.set("fromUser", request.params.fromUserId);
