@@ -129,12 +129,13 @@ Parse.Cloud.define("postReportMessage", function(request, response) {
 });
 
 Parse.Cloud.define("deleteQuestionFeed", function(request, response) {
-    var query = new Parse.Query("Questions");
+    var query = new Parse.Query("Feeds");
     query.equalTo("toQuestionID", request.params.questionId);
     query.limit = 1000;
     query.find({
         success: function(results) {
             console.log("delete all");
+            console.log(results.length);
             Parse.Object.destroyAll(results);
         }
     });
