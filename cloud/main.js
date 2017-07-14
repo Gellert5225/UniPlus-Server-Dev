@@ -134,8 +134,17 @@ Parse.Cloud.define("deleteQuestionFeed", function(request, response) {
     query.limit = 1000;
     query.find({
         success: function(results) {
-            console.log("delete all");
-            console.log(results.length);
+            Parse.Object.destroyAll(results);
+        }
+    });
+});
+
+Parse.Cloud.define("deleteAnswerFeed", function(request, response) {
+    var query = new Parse.Query("Feeds");
+    query.equalTo("toAnswerID", request.params.answerID);
+    query.limit = 1000;
+    query.find({
+        success: function(results) {
             Parse.Object.destroyAll(results);
         }
     });
