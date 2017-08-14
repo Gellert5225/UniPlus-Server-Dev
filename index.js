@@ -1,6 +1,9 @@
 var express     = require('express');
 var ParseServer = require('parse-server').ParseServer;
 var path        = require('path');
+var cookieSession = require('cookie-session');
+var bodyParser = require('body-parser');
+var methodOverride   = require("method-override");
 
 //var databaseUri = process.env.DATABASE_URI || process.env.MONGODB_URI;
 //
@@ -41,6 +44,7 @@ Parse.serverURL = process.env.SERVER_URL || 'http://localhost:1337/parse';
 
 var app = express();
 
+app.set('view engine', 'ejs');
 app.use('/public', express.static(path.join(__dirname, '/public')));
 
 var mountPath = process.env.PARSE_MOUNT || '/parse';
@@ -52,7 +56,7 @@ app.use(cookieSession({
   maxAge: 15724800000
 }));
 
-app.use(bodyParser.urlencoded({extended:false}));
+app.use(bodyParser.urlencoded({extended:true}));
 app.use(methodOverride('_method'));
 
 app.get('/', function(req, res) {
