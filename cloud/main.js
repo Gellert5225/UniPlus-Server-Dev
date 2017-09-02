@@ -1,5 +1,5 @@
 Parse.Cloud.define('hello', function(req, res) {
-  res.success('Hi');
+    res.success('Hi');
 });
 
 Parse.Cloud.define("testPush", function(request, response) {

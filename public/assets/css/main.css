@@ -1,0 +1,71 @@
+@import url(https://fonts.googleapis.com/css?family=Open+Sans:300,400,600);
+@import url(https://fonts.googleapis.com/css?family=Roboto:400,300,100,500,200);
+
+.navbar-custom {
+  background-color: #2B65A7;
+  border-color: #030033;
+}
+
+.navbar-brand {
+  margin-right: 20px;
+}
+
+.navbar-customBrand {
+  height: 100%;
+  font-family:Open Sans;
+  font-size: 27px; 
+  font-weight: 300; 
+  color: #ffffff;
+  padding: 10px;
+  margin:auto;
+  vertical-align: middle;
+}
+
+.container-fluid {
+  padding: 0 20%;
+}
+
+.searchForm {
+  vertical-align: middle;
+  margin-top: 4px;
+}
+
+.btn.btn-outline-success {
+  vertical-align: middle;
+  display: inline !important;
+}
+
+.form-control {
+  letter-spacing: 0.8px;
+  vertical-align: middle;
+  border: 0px;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+  vertical-align: middle;
+  width: 200px;
+  font-family: Open Sans;
+  font-weight: 300;
+  font-size: 15px;
+  display: inline !important;
+  padding: 0.4rem 0.5rem;
+}
+
+.navbar-nav {
+  float: left;
+  margin-right: 20px;
+}
+
+#navWrap {
+  display: inline;
+  float: left;
+  flex:1;
+  min-width: 484px;
+}
+
+#loginul {
+  min-width: 143px;
+}
+
+#navbarNavAltMarkup {
+}
