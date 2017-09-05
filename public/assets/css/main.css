@@ -38,7 +38,7 @@
 .form-control {
   letter-spacing: 0.8px;
   vertical-align: middle;
-  border: 0px;
+  border: 2px;
   -webkit-border-radius: 5px;
   -moz-border-radius: 5px;
   border-radius: 5px;
@@ -49,6 +49,12 @@
   font-size: 15px;
   display: inline !important;
   padding: 0.4rem 0.5rem;
+}
+
+.form-control-label {
+  font-family: Roboto;
+  font-weight: 500;
+  font-size: 17px;
 }
 
 .navbar-nav {
@@ -65,6 +71,7 @@
 
 #loginul {
   min-width: 143px;
+  float: left;
 }
 
 #navbarNavAltMarkup {

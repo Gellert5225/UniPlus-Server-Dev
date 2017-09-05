@@ -5,6 +5,7 @@ var cookieSession  = require('cookie-session');
 var bodyParser     = require('body-parser');
 var methodOverride = require("method-override");
 var indexRoute     = require('./routes/index.js');
+var flash          = require("connect-flash");
 
 var mountPath = process.env.PARSE_MOUNT || '/parse';
 
@@ -45,11 +46,22 @@ app.set('view engine', 'ejs');
 app.use('/public', express.static(path.join(__dirname, '/public')));
 
 app.use(mountPath, api);
+app.use(flash());
+
 app.use(cookieSession({
   name: 'form-cookie',
   secret: 'form-key',
   maxAge: 15724800000
 }));
+
+app.use(function(req, res, next) {
+  res.locals.currentUser = req.session.user;
+  res.locals.loginErrorFlash = req.flash("loginError");
+  res.locals.signupErrorFlash = req.flash("signupError");
+  res.locals.successFlash = req.flash("success");
+  next();
+});
+
 app.use(bodyParser.urlencoded({extended:true}));
 app.use(methodOverride('_method'));
 app.use(indexRoute);
@@ -57,7 +69,7 @@ app.use(indexRoute);
 var port = process.env.PORT || 1337;
 var httpServer = require('http').createServer(app);
 httpServer.listen(port, function() {
-console.log('UniPlus development server running on port ' + port + '.');
+  console.log('UniPlus development server running on port ' + port + '.');
 });
 
 // This will enable the Live Query real-time server
