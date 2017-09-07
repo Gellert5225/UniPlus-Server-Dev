@@ -1,6 +1,6 @@
 var express = require('express');
-var router = express.Router();
 var path = require('path');
+var router = express.Router();
 
 router.get('/', function(req, res) {
   res.status(200).render('landing');

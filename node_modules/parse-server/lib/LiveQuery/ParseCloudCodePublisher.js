@@ -9,6 +9,10 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 var _ParsePubSub = require('./ParsePubSub');
 
+var _node = require('parse/node');
+
+var _node2 = _interopRequireDefault(_node);
+
 var _logger = require('../logger');
 
 var _logger2 = _interopRequireDefault(_logger);
@@ -32,12 +36,12 @@ var ParseCloudCodePublisher = function () {
   _createClass(ParseCloudCodePublisher, [{
     key: 'onCloudCodeAfterSave',
     value: function onCloudCodeAfterSave(request) {
-      this._onCloudCodeMessage('afterSave', request);
+      this._onCloudCodeMessage(_node2.default.applicationId + 'afterSave', request);
     }
   }, {
     key: 'onCloudCodeAfterDelete',
     value: function onCloudCodeAfterDelete(request) {
-      this._onCloudCodeMessage('afterDelete', request);
+      this._onCloudCodeMessage(_node2.default.applicationId + 'afterDelete', request);
     }
 
     // Request is the request object from cloud code functions. request.object is a ParseObject.

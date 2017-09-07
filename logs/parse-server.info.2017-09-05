@@ -1,0 +1,3 @@
+{"error":{"code":101,"message":"Invalid username/password."},"level":"error","message":"Error generating response. ParseError { code: 101, message: 'Invalid username/password.' }","timestamp":"2017-09-05T00:33:16.840Z"}
+{"error":{"code":200,"message":"username is required."},"level":"error","message":"Error handling request: ParseError { code: 200, message: 'username is required.' }","timestamp":"2017-09-05T00:41:59.806Z"}
+{"error":{"code":200,"message":"username is required."},"level":"error","message":"Error handling request: ParseError { code: 200, message: 'username is required.' }","timestamp":"2017-09-05T00:42:04.164Z"}

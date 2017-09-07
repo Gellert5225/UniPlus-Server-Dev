@@ -31,13 +31,13 @@ var GlobalConfigRouter = exports.GlobalConfigRouter = function (_PromiseRouter) 
   function GlobalConfigRouter() {
     _classCallCheck(this, GlobalConfigRouter);
 
-    return _possibleConstructorReturn(this, Object.getPrototypeOf(GlobalConfigRouter).apply(this, arguments));
+    return _possibleConstructorReturn(this, (GlobalConfigRouter.__proto__ || Object.getPrototypeOf(GlobalConfigRouter)).apply(this, arguments));
   }
 
   _createClass(GlobalConfigRouter, [{
     key: 'getGlobalConfig',
     value: function getGlobalConfig(req) {
-      return req.config.database.find('_GlobalConfig', { objectId: 1 }, { limit: 1 }).then(function (results) {
+      return req.config.database.find('_GlobalConfig', { objectId: "1" }, { limit: 1 }).then(function (results) {
         if (results.length != 1) {
           // If there is no config in the database - return empty config.
           return { response: { params: {} } };
@@ -55,7 +55,7 @@ var GlobalConfigRouter = exports.GlobalConfigRouter = function (_PromiseRouter) 
         acc['params.' + key] = params[key];
         return acc;
       }, {});
-      return req.config.database.update('_GlobalConfig', { objectId: 1 }, update, { upsert: true }).then(function () {
+      return req.config.database.update('_GlobalConfig', { objectId: "1" }, update, { upsert: true }).then(function () {
         return { response: { result: true } };
       });
     }
