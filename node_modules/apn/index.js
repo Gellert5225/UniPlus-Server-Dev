@@ -1,14 +1,36 @@
-exports.Connection = require("./lib/connection");
-exports.connection = exports.Connection;
+const debug = require("debug")("apn");
+debug.log = console.log.bind(console);
 
-exports.Device = require("./lib/device");
-exports.device = exports.Device;
+const credentials = require("./lib/credentials")({
+  logger: debug
+});
 
-exports.Errors = require("./lib/errors");
-exports.error = exports.Errors;
+const config = require("./lib/config")({
+  logger: debug,
+  prepareCertificate: credentials.certificate,
+  prepareToken: credentials.token,
+  prepareCA: credentials.ca,
+});
 
-exports.Feedback = require("./lib/feedback");
-exports.feedback = exports.Feedback;
+const http2 = require("http2");
 
-exports.Notification = require("./lib/notification");
-exports.notification = exports.Notification;
+const Client = require("./lib/client")({
+  logger: debug,
+  config,
+  http2,
+});
+
+const Provider = require("./lib/provider")({
+  logger: debug,
+  Client,
+});
+
+const Notification = require("./lib/notification");
+
+const token = require("./lib/token");
+
+module.exports = {
+  Provider,
+  Notification,
+  token,
+};

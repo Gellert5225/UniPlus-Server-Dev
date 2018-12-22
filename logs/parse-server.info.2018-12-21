@@ -1,0 +1,4 @@
+{"error":{"code":101,"message":"Invalid username/password."},"level":"error","message":"Error generating response. ParseError { code: 101, message: 'Invalid username/password.' }","timestamp":"2018-12-21T09:46:52.270Z"}
+{"code":101,"message":"Invalid username/password.","level":"error","timestamp":"2018-12-21T09:46:52.275Z"}
+{"error":{"code":101,"message":"Invalid username/password."},"level":"error","message":"Error generating response. ParseError { code: 101, message: 'Invalid username/password.' }","timestamp":"2018-12-21T13:32:31.998Z"}
+{"code":101,"message":"Invalid username/password.","level":"error","timestamp":"2018-12-21T13:32:32.003Z"}
