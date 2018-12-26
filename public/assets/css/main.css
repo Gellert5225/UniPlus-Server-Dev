@@ -64,7 +64,6 @@
 
 #navWrap {
   display: inline;
-  float: left;
   flex:1;
   min-width: 484px;
 }
@@ -83,6 +82,7 @@
 
 #leftCol {
   padding: 0px;
+  margin: 0px;
   border-right: 1px solid #e4e4e4;
 }
 
@@ -106,11 +106,37 @@
 }
 
 #header {
-  height: 50px;
+  height: 60px;
   border-bottom: 1px solid #e4e4e4;
 }
 
 #tab {
-  height: 50px;
+  height: 40px;
   border-bottom: 1px solid #e4e4e4;
+}
+
+#askBtn {
+  margin-top: 15px;
+  width: 80%;
+  margin-left: 13%;
+  margin-right: 10%;
+  background-color: rgb(52, 152, 219);
+  border-color: rgb(52, 152, 219);
+}
+
+#qppdrop {
+  background-color: rgb(244, 245, 249);
+  border-color: rgb(209, 213, 223);
+  color: rgb(139, 151, 177);
+}
+
+#qppmenu {
+  min-width: 50px;
+  width: 50px !important;
+}
+
+.dropdown-item {
+  text-align: center;
+  padding-left: 10px;
+  padding-right:10px;
 }

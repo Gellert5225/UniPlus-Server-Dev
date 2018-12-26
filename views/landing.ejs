@@ -3,18 +3,31 @@
     <div class="row">
       <div class="col" id="leftCol" >
         <div id="askQuestion">
-          <button type="button" class="btn btn-primary">Ask A Question</button>
+          <button type="button" class="btn btn-primary" id="askBtn">ASK A QUESTION</button>
         </div>
         <div id="menu">
-          <button type="button" class="btn btn-primary">Ask A Question</button>
+          
         </div>
       </div>
-      <div class="col-8" id="midCol">
+      <div class="col-7" id="midCol">
         <div id="header">
-          <button type="button" class="btn btn-primary">Ask A Question</button>
+          <p style="display: inline-block; font-family:Open Sans; font-size: 25px; font-weight: 400; margin-left: 30px; padding-top: 15px; height: 50%; width: 200px;">All Questions</p>
+          <div class="dropdown" style="display:inline-block; float:right; margin-right: 20px; margin-top: 14px;">
+            <p style="display: inline-block;">Questions per page:</p>
+            <div class="btn-group ">
+              <button id="qppdrop" type="button" class="btn btn-primary dropdown-toggle btn-sm" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                10
+              </button>
+              <div id="qppmenu" class="dropdown-menu">
+                <a class="dropdown-item" href="#">10</a>
+                <a class="dropdown-item" href="#">15</a>
+                <a class="dropdown-item" href="#">20</a>
+              </div>
+            </div>
+          </div>
         </div>
         <div id="tab">
-          <button type="button" class="btn btn-primary">Ask A Question</button>
+          
         </div>
       </div>
       <div class="col" id="rightCol">
