@@ -19,7 +19,8 @@
     "nodemon": "^1.18.9",
     "parse": "~1.8.0",
     "parse-server": "^2.8.4",
-    "path": "^0.12.7"
+    "path": "^0.12.7",
+    "mime": "^2.0.3"
   },
   "scripts": {
     "start": "node index.js"
