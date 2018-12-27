@@ -21,8 +21,8 @@
                     width: 200px;">
             All Questions
           </p>
-          <div class="dropdown" style="display:inline-block; float:right; margin-right: 20px; margin-top: 14px;">
-            <p style="display: inline-block;">Questions per page:</p>
+          <div class="dropdown" style="display:inline-block; float:right; margin-right: 20px; margin-top: 15px;">
+            <p style="display: inline-block; font-family:Open Sans; font-size: 14px; font-weight: 400; color: rgb(139, 151, 177);">Questions per page:</p>
             <div class="btn-group ">
               <button id="qppdrop" type="button" class="btn btn-primary dropdown-toggle btn-sm" 
                       data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -42,10 +42,50 @@
 
         <div id="questinos">
           <% questions.forEach((question, index)=>{ %>
-            <% console.log(question.get('title')); %>
-            <div style="border-bottom: 1px solid #e4e4e4; min-height: 50px; padding: 10px 20px;">
-              <div style="width: 70%;">
-                <p> <%= question.get('title'); %> </p>
+            <% if (index % 2 == 0) { %>
+              <div class="questionWrapper" style="background-color: rgb(251, 252, 255)">
+            <% } else { %>
+              <div class="questionWrapper">
+            <% } %>
+              <div style="display: inline-block; width: 70%;">
+                <div style="cursor: pointer;">
+                  <div style="display: inline-block;">
+                    <img class="profilePic" src="<%= question.get('user').get('profilePhoto80').url() %>">
+                  </div>
+                  <div style="display: inline-block;">
+                    <p style="font-family:Open Sans; font-size: 12px; font-weight: 400; color: rgb(72, 85, 109);"><%= question.get('user').get('nickName') %></p>
+                  </div>
+                </div>
+                <div style="width: 100%; padding-bottom: 10px;">
+                  <p class="questionTitle"> <%= question.get('title'); %> </p>
+                </div>
+              </div>
+
+              <div class="questionStatsArea">
+                <div style="width: 30%; display: inline-block;">
+                  <div class="questionStatsCircle">
+                    <p class="questionStats"><%= question.get('views'); %></p>
+                  </div>
+                  <div>
+                    <p class="questionStatsText">views</p>
+                  </div>
+                </div>
+                <div style="width: 30%; display: inline-block;">
+                  <div <% if (question.get('correctAnswer') == null) { %>class="questionStatsCircle" <% } else { %> class="questionStatsCircleGreen" <% } %>>
+                    <p <% if (question.get('correctAnswer') == null) { %>class="questionStats" <% } else { %> class="questionStatsGreen" <% } %>><%= question.get('numberOfComments'); %></p>
+                  </div>
+                  <div>
+                    <p class="questionStatsText">answers</p>
+                  </div>
+                </div>
+                <div style="width: 30%; display: inline-block;">
+                  <div class="questionStatsCircle">
+                    <p class="questionStats"><%= question.get('upVotes'); %></p>
+                  </div>
+                  <div>
+                    <p class="questionStatsText">votes</p>
+                  </div>
+                </div>
               </div>
             </div>
           <% }); %>

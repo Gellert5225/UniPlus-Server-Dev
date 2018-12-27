@@ -10,7 +10,6 @@ router.get('/', function(req, res) {
   query.include("user");
   query.find({
     success: function(results) {
-      console.log('Successfully retrieved ' + results.length + ' questions.');
       res.status(200).render('landing', { questions : results });
     },
     error: function(error) {
@@ -34,7 +33,6 @@ router.get('/logout', function(req, res) {
 
 router.get('/ask', function(req, res) {
   if (!req.session.user) {
-    console.error('Not logged in');
     req.flash('askError', 'You need to log in to post a question');
     res.redirect('back');
   } else {
@@ -49,7 +47,6 @@ router.post('/login', function(req, res) {
       res.redirect('back');
     },
     error: function(user, error) {
-      console.log('Error: ' + error.message);
       req.flash('loginError', error.message);
       return res.redirect('back');
     }
@@ -69,7 +66,6 @@ router.post('/register', function(req, res) {
       res.redirect('back');
     },
     error: function(user, error) {
-      console.log('Error: ' + error.message);
       req.flash("signupError", error.message);
       return res.redirect('back');
     }
