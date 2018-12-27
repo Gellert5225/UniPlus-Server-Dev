@@ -39,6 +39,17 @@
         <div id="tab">
           
         </div>
+
+        <div id="questinos">
+          <% questions.forEach((question, index)=>{ %>
+            <% console.log(question.get('title')); %>
+            <div style="border-bottom: 1px solid #e4e4e4; min-height: 50px; padding: 10px 20px;">
+              <div style="width: 70%;">
+                <p> <%= question.get('title'); %> </p>
+              </div>
+            </div>
+          <% }); %>
+        </div>
       </div>
       <div class="col" id="rightCol">
         3 of 3

@@ -3,7 +3,20 @@ var path = require('path');
 var router = express.Router();
 
 router.get('/', function(req, res) {
-  res.status(200).render('landing');
+  const Question = Parse.Object.extend("Questions");
+  const query = new Parse.Query(Question);
+  query.limit(10);
+  query.descending("createdAt");
+  query.include("user");
+  query.find({
+    success: function(results) {
+      console.log('Successfully retrieved ' + results.length + ' questions.');
+      res.status(200).render('landing', { questions : results });
+    },
+    error: function(error) {
+      console.log('Error: ' + error.code + ' ' + error.message);
+    }
+  });
 });
 
 router.get('/login', function(req, res) {
