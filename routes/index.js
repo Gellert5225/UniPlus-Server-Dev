@@ -72,4 +72,8 @@ router.post('/register', function(req, res) {
   });
 });
 
+router.get('/docs', function(req, res) {
+  res.sendFile(path.join(__dirname, '../public/index.html'));
+});
+
 module.exports = router;
