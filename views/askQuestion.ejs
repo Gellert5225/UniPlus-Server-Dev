@@ -1,0 +1,68 @@
+<% include ./partials/header.ejs %>
+<div id="mainBody" class="container-fluid">
+  <div class="row">
+    <div class="col" id="leftCol" >
+      <div id="menu">
+        
+      </div>
+    </div>
+    <div class="col-7" id="midCol">
+      <div id="composeArea" style="padding: 20px;">
+        <div>
+          <h3>Ask A Question</h3>
+          <br>
+        </div>
+        <div>
+          <h6>Title</h6>
+          <div id="titleEditor" style="border-radius: 5px;">
+            <p><br></p>
+          </div>
+          <br>
+        </div>
+        <div>
+          <h6>Body</h6>
+          <div id="editor" style="height: 500px; border-bottom-left-radius: 5px; border-bottom-right-radius: 5px;">
+            <p><br></p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col" id="rightCol">
+      3 of 3
+    </div>
+  </div>
+</div>
+
+  <script>
+    var toolbarOptions = [
+      ['bold', 'italic', 'underline', 'strike'],        // toggled buttons
+      ['blockquote', 'code-block'],
+
+      [{ 'header': 1 }, { 'header': 2 }],               // custom button values
+      [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+      [{ 'script': 'sub'}, { 'script': 'super' }],      // superscript/subscript
+      [{ 'indent': '-1'}, { 'indent': '+1' }],          // outdent/indent
+
+      [{ 'align': [] }],
+
+      ['image']
+    ];
+
+    var quill = new Quill('#editor', {
+      modules: {
+        toolbar: toolbarOptions
+      },
+      theme: 'snow',
+      placeholder: 'Compose your question...'
+    });
+
+    var quillTitle = new Quill('#titleEditor', {
+      modules: {
+        toolbar: null
+      },
+      theme: 'snow',
+      placeholder: 'What\'s your question? Be specific...'
+    });
+  </script>
+
+<% include ./partials/footer.ejs %>

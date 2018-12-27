@@ -1,0 +1,2 @@
+{"error":{"code":101,"message":"Invalid username/password."},"level":"error","message":"Error generating response. ParseError { code: 101, message: 'Invalid username/password.' }","timestamp":"2018-12-27T02:23:56.875Z"}
+{"code":101,"message":"Invalid username/password.","level":"error","timestamp":"2018-12-27T02:23:56.879Z"}

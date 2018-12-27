@@ -122,6 +122,7 @@
   margin-right: 10%;
   background-color: rgb(52, 152, 219);
   border-color: rgb(52, 152, 219);
+  cursor: pointer;
 }
 
 #qppdrop {
@@ -139,4 +140,9 @@
   text-align: center;
   padding-left: 10px;
   padding-right:10px;
+}
+
+.ql-toolbar.ql-snow {
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
 }

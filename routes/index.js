@@ -19,6 +19,16 @@ router.get('/logout', function(req, res) {
   res.redirect('back');
 });
 
+router.get('/ask', function(req, res) {
+  if (!req.session.user) {
+    console.error('Not logged in');
+    req.flash('askError', 'You need to log in to post a question');
+    res.redirect('back');
+  } else {
+    res.status(200).render('askQuestion');
+  }
+});
+
 router.post('/login', function(req, res) {
   Parse.User.logIn(req.body.username, req.body.password, {
     success: function(user) {

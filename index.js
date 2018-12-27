@@ -55,6 +55,7 @@ app.use(function(req, res, next) {
   res.locals.currentUser = req.session.user;
   res.locals.loginErrorFlash = req.flash("loginError");
   res.locals.signupErrorFlash = req.flash("signupError");
+  res.locals.askErrorFlash = req.flash("askError");
   res.locals.successFlash = req.flash("success");
   next();
 });

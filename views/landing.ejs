@@ -1,9 +1,14 @@
 <% include ./partials/header.ejs %>
   <div id="mainBody" class="container-fluid">
+
+    <% include ./partials/askErrorFlash.ejs %>
+
     <div class="row">
       <div class="col" id="leftCol" >
         <div id="askQuestion">
-          <button type="button" class="btn btn-primary" id="askBtn">ASK A QUESTION</button>
+          <button type="button" class="btn btn-primary" id="askBtn" onclick="window.location.href='/ask'">
+            ASK A QUESTION
+          </button>
         </div>
         <div id="menu">
           
@@ -11,11 +16,16 @@
       </div>
       <div class="col-7" id="midCol">
         <div id="header">
-          <p style="display: inline-block; font-family:Open Sans; font-size: 25px; font-weight: 400; margin-left: 30px; padding-top: 15px; height: 50%; width: 200px;">All Questions</p>
+          <p style="display: inline-block; font-family:Open Sans; font-size: 25px; 
+                    font-weight: 400; margin-left: 30px; padding-top: 15px; height: 50%; 
+                    width: 200px;">
+            All Questions
+          </p>
           <div class="dropdown" style="display:inline-block; float:right; margin-right: 20px; margin-top: 14px;">
             <p style="display: inline-block;">Questions per page:</p>
             <div class="btn-group ">
-              <button id="qppdrop" type="button" class="btn btn-primary dropdown-toggle btn-sm" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              <button id="qppdrop" type="button" class="btn btn-primary dropdown-toggle btn-sm" 
+                      data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 10
               </button>
               <div id="qppmenu" class="dropdown-menu">
