@@ -10,12 +10,13 @@
         $(this).parents(".dropdown").find('.btn').val($(this).data('value'));
       });
     </script>
+
     <script>
-      $(".sort-questions ul li a").hover(function () {
-        $(this).addClass("mouseOver");
+      $(".sort-questions ul li").hover(function () {
+        $(this).addClass("mouseOverli");
       },
       function () {
-        $(this).removeClass("mouseOver");
+        $(this).removeClass("mouseOverli");
       });
     </script>
 
@@ -24,11 +25,11 @@
         var loc = window.location.href; 
         $(".active").removeClass("active");
         if(/feature/.test(loc)) {
-          $('.feature').addClass('active');
+          $('.featureli').addClass('activeli');
         } else if (/unanswer/.test(loc)) {
-          $('.unanswer').addClass('active');
+          $('.unanswerli').addClass('activeli');
         } else {
-          $('.latest').addClass('active');
+          $('.latestli').addClass('activeli');
         }
       });
     </script>
