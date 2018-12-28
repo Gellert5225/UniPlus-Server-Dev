@@ -5,6 +5,7 @@ var cookieSession  = require('cookie-session');
 var bodyParser     = require('body-parser');
 var methodOverride = require("method-override");
 var indexRoute     = require('./routes/index.js');
+var questionRoute  = require('./routes/question.js');
 var testRoute      = require('./routes/test.js');
 var flash          = require("connect-flash");
 
@@ -66,6 +67,7 @@ app.use(bodyParser.urlencoded({extended:true}));
 app.use(methodOverride('_method'));
 app.use(indexRoute);
 app.use(testRoute);
+app.use(questionRoute);
 
 var port = process.env.PORT || 1337;
 var httpServer = require('http').createServer(app);

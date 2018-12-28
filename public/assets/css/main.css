@@ -2,7 +2,7 @@
 @import url(https://fonts.googleapis.com/css?family=Roboto:400,300,100,500,200);
 
 .navbar-custom {
-  background-color: #2B65A7;
+  background-color: rgb(42, 100, 166);
   border-color: #030033;
 }
 
@@ -87,6 +87,7 @@
 }
 
 #midCol {
+  height: auto;
   padding: 0px;
   border-right: 1px solid #e4e4e4;
 }
@@ -197,7 +198,6 @@
 .questionStatsArea {
   display: inline-block; 
   padding-left: 1%; 
-  float:right; 
   width: 30%; 
   transform: translate(0%,-50%);
   position: absolute; 
@@ -265,4 +265,66 @@
 
 .mouseOverli {
   border-bottom: 3px solid rgb(53, 111, 177);
+}
+
+.titleWrapper {
+  border-bottom: 1px solid #e4e4e4;
+}
+
+.voteArea {
+  margin-top: 5px;
+  display: inline-block;
+  width: 5%;
+  height: 150px;
+}
+
+.questionBody {
+  padding-left: 15px;
+  overflow: hidden;
+}
+
+.bodyView {
+  width: 95%;
+  height: 100%;
+  float: right;
+}
+
+.questionBody .ql-container {
+  font-size: 15px;
+}
+
+.upTriangle {
+  cursor: pointer;
+  margin-left: auto;
+  margin-right:auto;
+  width: 0;
+  height: 0;
+  border: solid 15px;
+  border-top-color: transparent;
+  border-left-color: transparent;
+  border-right-color: transparent;
+  border-bottom-color: rgb(153, 168, 191);
+}
+
+.downTriangle {
+  cursor: pointer;
+  margin-left: auto;
+  margin-right:auto;
+  width: 0;
+  height: 0;
+  border: solid 15px;
+  border-top-color: rgb(153, 168, 191);
+  border-left-color: transparent;
+  border-right-color: transparent;
+  border-bottom-color: transparent;
+}
+
+.voteNumber {
+  margin-top: 8px;
+  margin-bottom: 8px;
+  text-align: center;
+  font-family: Open Sans; 
+  font-size: 20px; 
+  font-weight: 400;
+  color: rgb(113, 128, 151);
 }

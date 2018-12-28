@@ -1,0 +1,95 @@
+<% include ./partials/header.ejs %>
+  <div id="mainBody" class="container-fluid">
+
+    <% include ./partials/askErrorFlash.ejs %>
+
+    <div class="row">
+      <div class="col" id="leftCol" >
+        <div id="askQuestion">
+          <button type="button" class="btn btn-primary" id="askBtn" onclick="window.location.href='/ask'">
+            ASK A QUESTION
+          </button>
+        </div>
+        <div id="menu">
+          
+        </div>
+      </div>
+      <div class="col-7" id="midCol">
+        <div class="titleWrapper">
+          <p style="display: inline-block; font-family:Open Sans; font-size: 25px; 
+                    font-weight: 400; margin-left: 30px; padding-top: 15px; height: 50%; ">
+            <%= question.get('title'); %>
+          </p>
+        </div>
+        <div style="border-bottom: 1px solid #e4e4e4;">
+          <div class="questionBody">
+            <div class="voteArea">
+              <div class="upTriangle"></div>
+              <p class="voteNumber">0</p>
+              <div class="downTriangle"></div>
+            </div>
+            <div class="bodyView" id="editor" style="border-style: none;"></div>
+          </div>
+        </div>
+      </div>
+      <div class="col" id="rightCol">
+        3 of 3
+      </div>
+    </div>
+  </div>
+
+  <div id="sample" style="display: none;">
+    <%= question.get('bodyRaw'); %>
+  </div>
+
+  <script>
+    $('.upTriangle').click(function(){
+      if ($('.downTriangle').css('border-top-color') == 'rgb(42, 100, 166)') {
+        $('.downTriangle').css({'border-top-color': 'rgb(153, 168, 191)'});
+        $('.upTriangle').css({'border-bottom-color': 'rgb(42, 100, 166)'});
+        $('.voteNumber').text(parseInt($(".voteNumber").text()) + 2);
+      } else {
+        if ($('.upTriangle').css('border-bottom-color') == "rgb(153, 168, 191)") {
+          $('.upTriangle').css({'border-bottom-color': 'rgb(42, 100, 166)'});
+          $('.voteNumber').text(parseInt($(".voteNumber").text()) + 1);
+        } else {
+          $('.upTriangle').css({'border-bottom-color': 'rgb(153, 168, 191)'});
+          $('.voteNumber').text(parseInt($(".voteNumber").text()) - 1);
+        }
+      }
+    });
+
+    $('.downTriangle').click(function(){
+      if ($('.upTriangle').css('border-bottom-color') == 'rgb(42, 100, 166)') {
+        $('.upTriangle').css({'border-bottom-color': 'rgb(153, 168, 191)'});
+        $('.downTriangle').css({'border-top-color': 'rgb(42, 100, 166)'});
+        $('.voteNumber').text(parseInt($(".voteNumber").text()) - 2);
+      } else {
+        if ($('.downTriangle').css('border-top-color') == "rgb(153, 168, 191)") {
+          $('.downTriangle').css({'border-top-color': 'rgb(42, 100, 166)'});
+          $('.voteNumber').text(parseInt($(".voteNumber").text()) - 1);
+        } else {
+          $('.downTriangle').css({'border-top-color': 'rgb(153, 168, 191)'});
+          $('.voteNumber').text(parseInt($(".voteNumber").text()) + 1);
+        }
+      }
+      
+    });
+  </script>
+
+  <script>
+    var quill = new Quill('#editor', {
+      modules: {
+        toolbar: null
+      },
+      theme: 'snow',
+      placeholder: 'What\'s your question? Be specific...'
+    });
+
+    $( document ).ready(function() {
+      var text = $('#sample').text();
+      quill.root.innerHTML = text.substring(5, text.length - 3);
+    });
+  </script>
+
+<% include ./partials/footer.ejs %>

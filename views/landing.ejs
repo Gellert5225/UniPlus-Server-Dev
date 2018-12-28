@@ -69,36 +69,41 @@
                   </div>
                 </div>
                 <div style="width: 100%; padding-bottom: 10px;">
-                  <p class="questionTitle"> <%= question.get('title'); %> </p>
+                  <a href="/questions/<%= question.id; %>" style="text-decoration: none;">
+                    <p class="questionTitle"> <%= question.get('title'); %> </p>
+                  </a>
                 </div>
               </div>
 
-              <div class="questionStatsArea">
-                <div style="width: 30%; display: inline-block;">
-                  <div class="questionStatsCircle">
-                    <p class="questionStats"><%= question.get('views'); %></p>
+              <a href="/questions/<%= question.id; %>">
+                <div class="questionStatsArea">
+                  <div style="width: 30%; display: inline-block;">
+                    <div class="questionStatsCircle">
+                      <p class="questionStats"><%= question.get('views'); %></p>
+                    </div>
+                    <div>
+                      <p class="questionStatsText">views</p>
+                    </div>
                   </div>
-                  <div>
-                    <p class="questionStatsText">views</p>
+                  <div style="width: 30%; display: inline-block;">
+                    <div <% if (question.get('correctAnswer') == null) { %>class="questionStatsCircle" <% } else { %> class="questionStatsCircleGreen" <% } %>>
+                      <p <% if (question.get('correctAnswer') == null) { %>class="questionStats" <% } else { %> class="questionStatsGreen" <% } %>><%= question.get('numberOfComments'); %></p>
+                    </div>
+                    <div>
+                      <p class="questionStatsText">answers</p>
+                    </div>
+                  </div>
+                  <div style="width: 30%; display: inline-block;">
+                    <div class="questionStatsCircle">
+                      <p class="questionStats"><%= question.get('upVotes'); %></p>
+                    </div>
+                    <div>
+                      <p class="questionStatsText">votes</p>
+                    </div>
                   </div>
                 </div>
-                <div style="width: 30%; display: inline-block;">
-                  <div <% if (question.get('correctAnswer') == null) { %>class="questionStatsCircle" <% } else { %> class="questionStatsCircleGreen" <% } %>>
-                    <p <% if (question.get('correctAnswer') == null) { %>class="questionStats" <% } else { %> class="questionStatsGreen" <% } %>><%= question.get('numberOfComments'); %></p>
-                  </div>
-                  <div>
-                    <p class="questionStatsText">answers</p>
-                  </div>
-                </div>
-                <div style="width: 30%; display: inline-block;">
-                  <div class="questionStatsCircle">
-                    <p class="questionStats"><%= question.get('upVotes'); %></p>
-                  </div>
-                  <div>
-                    <p class="questionStatsText">votes</p>
-                  </div>
-                </div>
-              </div>
+              </a>
+              
             </div>
           <% }); %>
         </div>
