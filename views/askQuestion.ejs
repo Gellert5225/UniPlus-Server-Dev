@@ -15,15 +15,18 @@
         <div>
           <h6>Title</h6>
           <div id="titleEditor" style="border-radius: 5px;">
-            <p><br></p>
           </div>
           <br>
         </div>
         <div>
           <h6>Body</h6>
           <div id="editor" style="height: 500px; border-bottom-left-radius: 5px; border-bottom-right-radius: 5px;">
-            <p><br></p>
           </div>
+        </div>
+        <div>
+          <button type="submit" class="btn btn-primary" id="postBtn">
+            Post Your Question
+          </button>
         </div>
       </div>
     </div>
@@ -32,6 +35,9 @@
     </div>
   </div>
 </div>
+
+<script>
+</script>
 
   <script>
     var toolbarOptions = [
@@ -48,6 +54,9 @@
       ['image']
     ];
 
+    var icons = Quill.import('ui/icons');
+    icons['codeBlock'] = '<img src="../public/assets/images/codeBlock.png">';
+
     var quill = new Quill('#editor', {
       modules: {
         toolbar: toolbarOptions
@@ -63,6 +72,23 @@
       theme: 'snow',
       placeholder: 'What\'s your question? Be specific...'
     });
+
+    $('#postBtn').click(function(){
+    var title = $('#titleEditor').text();
+    var body = $('#editor .ql-editor').html();
+    $.ajax({
+      type: 'POST',
+      url: '/postQuestion',
+      data: {"title": title, "body": body},
+      dataType: 'text',
+      success: function(data) {
+          console.log(data);
+          window.location = data;
+      },error: function (xhr, status, error) {
+        console.log('Error: ' + error);
+      }
+    });
+  });
   </script>
 
 <% include ./partials/footer.ejs %>

@@ -1,5 +1,25 @@
 <% include ./partials/header.ejs %>
-  <div style="margin-top:10%;">
-    <h1>Hello</h1>
+
+  <div id="editor" style="margin-top: 70px; border-bottom-left-radius: 5px; border-bottom-right-radius: 5px;">
+    <p><br></p>
   </div>
+
+  <div id="sample" style="margin-top: 70px; display: none;">
+    <%= bodyString %>
+  </div>
+<script>
+  var quill = new Quill('#editor', {
+    modules: {
+      toolbar: null
+    },
+    theme: 'snow',
+    placeholder: 'What\'s your question? Be specific...'
+  });
+
+  $( document ).ready(function() {
+    var text = $('#sample').text();
+    quill.root.innerHTML = text.substring(5, text.length - 3);
+  });
+</script>
+
 <% include ./partials/footer.ejs %>

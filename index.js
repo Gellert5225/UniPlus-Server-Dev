@@ -51,8 +51,10 @@ app.use(cookieSession({
   maxAge: 15724800000
 }));
 
+Parse.User.enableUnsafeCurrentUser();
+
 app.use(function(req, res, next) {
-  res.locals.currentUser = req.session.user;
+  res.locals.currentUser = Parse.User.current();
   res.locals.loginErrorFlash = req.flash("loginError");
   res.locals.signupErrorFlash = req.flash("signupError");
   res.locals.askErrorFlash = req.flash("askError");
