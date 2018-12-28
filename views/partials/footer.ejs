@@ -10,6 +10,28 @@
         $(this).parents(".dropdown").find('.btn').val($(this).data('value'));
       });
     </script>
+    <script>
+      $(".sort-questions ul li a").hover(function () {
+        $(this).addClass("mouseOver");
+      },
+      function () {
+        $(this).removeClass("mouseOver");
+      });
+    </script>
+
+    <script>
+      $(function() {
+        var loc = window.location.href; 
+        $(".active").removeClass("active");
+        if(/feature/.test(loc)) {
+          $('.feature').addClass('active');
+        } else if (/unanswer/.test(loc)) {
+          $('.unanswer').addClass('active');
+        } else {
+          $('.latest').addClass('active');
+        }
+      });
+    </script>
     
   </body>
 </html>

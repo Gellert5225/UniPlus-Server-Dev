@@ -6,7 +6,16 @@ router.get('/', function(req, res) {
   const Question = Parse.Object.extend("Questions");
   const query = new Parse.Query(Question);
   query.limit(10);
-  query.descending("createdAt");
+
+  if (req.query.sort == 'feature') {
+    query.descending("upVotes"); 
+  } else if (req.query.sort == 'unanswer') {
+    query.descending("createdAt");
+    query.doesNotExist('correctAnswer');
+  } else { 
+    query.descending("createdAt"); 
+  }
+
   query.include("user");
   query.find({
     success: function(results) {

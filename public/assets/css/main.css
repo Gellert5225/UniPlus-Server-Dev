@@ -237,3 +237,20 @@
   padding-left: 10px;
   cursor: pointer;
 }
+
+.sortList {
+  padding-right: 40px;
+  display: inline-block;
+}
+
+.sort-questions {
+  height: 100%;
+}
+
+.active {
+  background-color: #868e96;
+}
+
+.mouseOver {
+  background-color: #868e96;
+}
