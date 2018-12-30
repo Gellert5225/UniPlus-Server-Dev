@@ -43,9 +43,9 @@
   </div>
 
   <script>
-    console.log('script');
+    console.log("<%= question.get('user').id %>");
     if ('<%= currentUserVoteStat %>' == 'upVote') $('.upTriangle').css({'border-bottom-color': 'rgb(42, 100, 166)'});
-    else if ('<%= currentUserVoteStat %>' == 'downVote') $('.downTriangle').css({'border-bottom-color': 'rgb(42, 100, 166)'});
+    else if ('<%= currentUserVoteStat %>' == 'downVote') $('.downTriangle').css({'border-top-color': 'rgb(42, 100, 166)'});
 
     var updateReputation = function(reputationDelta) {
       <% console.log('Current reputation for user ' + question.get('user').get('nickName')
@@ -70,26 +70,113 @@
     };
 
     var updateFeed = function(vote, voteType) {
-      $.ajax({
-        type: 'get',
-        headers: {
-            'X-Parse-Application-Id': "Zj9b976AHw3b7SkOgCKzaEjB7bjJoPh2XcyxTcgU",
-            "X-Parse-REST-API-Key": "restkey",
-            'X-Parse-Master-Key': "T5DQ2mT8LNAp0Enn9Y3ERU0iY93sT06PctF6Dt4g"
-        },
-        url: "/parse/classes/Feeds?",
-        data: "where=" + escape(JSON.stringify({"$relatedTo":{"object":{"__type":"Pointer","className":"Questions","objectId":"<%= question.id %>"},"key":"votes"}})),
-        processData: false,
-        success: function(results) {
-          console.log('success retrieved! ' + JSON.stringify(results));
-        }, error: function (xhr, status, error) {
-          console.log('Error: ' + error);
-        }
-      });
+      if (voteType == 'upVote' || voteType == 'downVote') {
+        $.ajax({
+          type: 'post',
+          headers: {
+              'X-Parse-Application-Id': "Zj9b976AHw3b7SkOgCKzaEjB7bjJoPh2XcyxTcgU",
+              "X-Parse-REST-API-Key": "restkey",
+              'X-Parse-Master-Key': "T5DQ2mT8LNAp0Enn9Y3ERU0iY93sT06PctF6Dt4g"
+          },
+          url: "/parse/classes/Feeds",
+          data: JSON.stringify({"type" : voteType, "fromUser": {
+                                                   "__type":"Pointer","className":"_User","objectId":"<%= currentUser.id %>"
+                                                 }, "toUser": {
+                                                   "__type":"Pointer","className":"_User","objectId":"<%= question.get('user').id %>"
+                                                 }, "toQuestion": {
+                                                   "__type":"Pointer","className":"Questions","objectId":"<%= question.id %>"
+                                                 }}),
+          contentType: "application/json; charset=utf-8",
+          dataType: "json",
+          success: function(e) {
+            console.log('posted a feed ' + e.objectId);
+            $.ajax({
+              type: 'put',
+              headers: {
+                  'X-Parse-Application-Id': "Zj9b976AHw3b7SkOgCKzaEjB7bjJoPh2XcyxTcgU",
+                  "X-Parse-REST-API-Key": "restkey",
+                  'X-Parse-Master-Key': "T5DQ2mT8LNAp0Enn9Y3ERU0iY93sT06PctF6Dt4g"
+              },
+              url: "/parse/classes/Questions/" + "<%= question.id %>",
+              data: JSON.stringify({"votes": {"__op": "AddRelation", "objects":[{"__type":"Pointer","className":"Feeds","objectId":e.objectId}]}}),
+              contentType: "application/json; charset=utf-8",
+              dataType: "json",
+              success: function(f) {
+                console.log('saved feed ' + e.objectId + ' to question: ' + "<%= question.id %>" + ' ' + JSON.stringify(f));
+              },error: function (xhr, status, error) {
+                console.log('Error: ' + error);
+              }
+            });
+          },error: function (xhr, status, error) {
+            console.log('Error: ' + error);
+          }
+        });
+      } else {
+        $.ajax({
+          type: 'get',
+          headers: {
+              'X-Parse-Application-Id': "Zj9b976AHw3b7SkOgCKzaEjB7bjJoPh2XcyxTcgU",
+              "X-Parse-REST-API-Key": "restkey",
+              'X-Parse-Master-Key': "T5DQ2mT8LNAp0Enn9Y3ERU0iY93sT06PctF6Dt4g"
+          },
+          url: "/parse/classes/Feeds?",
+          data: "where=" + escape(JSON.stringify({"$relatedTo":{
+                                                   "object":{
+                                                     "__type":"Pointer","className":"Questions","objectId":"<%= question.id %>"
+                                                   },"key":"votes"
+                                                 }, "fromUser": {
+                                                   "__type":"Pointer","className":"_User","objectId":"<%= currentUser.id %>"
+                                                 },"toQuestion": {
+                                                   "__type":"Pointer","className":"Questions","objectId":"<%= question.id %>"
+                                                 }
+                                                 })),
+          processData: false,
+          success: function(results) {
+            var array = results.results;
+            console.log('success retrieved ' + array.length + ' Feeds!' + ' ' + JSON.stringify(array));
+            if (array.length) {
+              if ((voteType == 'up' && vote == -1) || (voteType == 'down' && vote == 1)) {
+                $.ajax({
+                  type: 'delete',
+                  headers: {
+                      'X-Parse-Application-Id': "Zj9b976AHw3b7SkOgCKzaEjB7bjJoPh2XcyxTcgU",
+                      "X-Parse-REST-API-Key": "restkey",
+                      'X-Parse-Master-Key': "T5DQ2mT8LNAp0Enn9Y3ERU0iY93sT06PctF6Dt4g"
+                  },
+                  url: "/parse/classes/Feeds/" + array[0].objectId,
+                  success: function(d) {
+                    console.log('deleted feed');
+                  }, error: function (xhr, status, error) {
+                    console.log('Error: ' + error);
+                  }
+                });
+              } else if ((voteType == 'up' && vote == 2) || (voteType == 'down' && vote == -2)) {
+                $.ajax({
+                  type: 'put',
+                  headers: {
+                      'X-Parse-Application-Id': "Zj9b976AHw3b7SkOgCKzaEjB7bjJoPh2XcyxTcgU",
+                      "X-Parse-REST-API-Key": "restkey",
+                      'X-Parse-Master-Key': "T5DQ2mT8LNAp0Enn9Y3ERU0iY93sT06PctF6Dt4g"
+                  },
+                  data: voteType == 'up' ? JSON.stringify({"type" : "upVote"}) : JSON.stringify({"type" : "downVote"}),
+                  contentType: "application/json; charset=utf-8",
+                  dataType: "json",
+                  url: "/parse/classes/Feeds/" + array[0].objectId,
+                  success: function(d) {
+                    console.log('updated feed');
+                  }, error: function (xhr, status, error) {
+                    console.log('Error: ' + error);
+                  }
+                });
+              }
+            }
+          }, error: function (xhr, status, error) {
+            console.log('Error: ' + error);
+          }
+        });
+      }
 
     };
-
-    updateFeed(1, 'this');
 
     var updateVote = function(voteDelta) {
       <% console.log('Current vote ' + question.get('upVotes')); %>
@@ -115,25 +202,30 @@
     $('.upTriangle').click(function(){
       var voteDelta = 0;
       var repDelta = 0;
+      var voteType;
       if ($('.downTriangle').css('border-top-color') == 'rgb(42, 100, 166)') {
         $('.downTriangle').css({'border-top-color': 'rgb(153, 168, 191)'});
         $('.upTriangle').css({'border-bottom-color': 'rgb(42, 100, 166)'});
         $('.voteNumber').text(parseInt($(".voteNumber").text()) + 2);
         voteDelta = 2;
         repDelta = 20;
+        voteType = 'up';
       } else {
         if ($('.upTriangle').css('border-bottom-color') == "rgb(153, 168, 191)") {
           $('.upTriangle').css({'border-bottom-color': 'rgb(42, 100, 166)'});
           $('.voteNumber').text(parseInt($(".voteNumber").text()) + 1);
           voteDelta = 1;
           repDelta = 10;
+          voteType = 'upVote';
         } else {
           $('.upTriangle').css({'border-bottom-color': 'rgb(153, 168, 191)'});
           $('.voteNumber').text(parseInt($(".voteNumber").text()) - 1);
           voteDelta = -1;
           repDelta = -10;
+          voteType = 'up';
         }
       }
+      updateFeed(voteDelta, voteType);
       updateReputation(repDelta);
       updateVote(voteDelta);
     });
@@ -141,25 +233,30 @@
     $('.downTriangle').click(function(){
       var voteDelta = 0;
       var repDelta = 0;
+      var voteType;
       if ($('.upTriangle').css('border-bottom-color') == 'rgb(42, 100, 166)') {
         $('.upTriangle').css({'border-bottom-color': 'rgb(153, 168, 191)'});
         $('.downTriangle').css({'border-top-color': 'rgb(42, 100, 166)'});
         $('.voteNumber').text(parseInt($(".voteNumber").text()) - 2);
         voteDelta = -2;
         repDelta = -20;
+        var voteType = 'down';
       } else {
         if ($('.downTriangle').css('border-top-color') == "rgb(153, 168, 191)") {
           $('.downTriangle').css({'border-top-color': 'rgb(42, 100, 166)'});
           $('.voteNumber').text(parseInt($(".voteNumber").text()) - 1);
           voteDelta = -1;
           repDelta = -10;
+          var voteType = 'downVote';
         } else {
           $('.downTriangle').css({'border-top-color': 'rgb(153, 168, 191)'});
           $('.voteNumber').text(parseInt($(".voteNumber").text()) + 1);
           voteDelta = 1;
           repDelta = 10;
+          var voteType = 'down';
         }
       }
+      updateFeed(voteDelta, voteType);
       updateReputation(repDelta);
       updateVote(voteDelta);
     });

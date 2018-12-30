@@ -14,16 +14,16 @@ router.get("/questions/:id", function(req,res){
     var relation = question.relation("votes");
     var query = relation.query();
     query.equalTo('fromUser', Parse.User.current());
+    query.equalTo('toQuestion', question);
     query.find({
       success: function(results) {
         if (results.length) {
-          console.log(results[0]);
-          if (results[0].get('type') == 'upVote')
+          if (results[0].get('type') == 'upVote') {
             res.status(200).render('question', {question: question, currentUserVoteStat: 'upVote'});
-          else
+          } else {
             res.status(200).render('question', {question: question, currentUserVoteStat: 'downVote'});
+          }
         } else {
-            console.log('not found');
             res.status(200).render('question', {question: question, currentUserVoteStat: 'none'});
         }
       },
