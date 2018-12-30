@@ -25,7 +25,7 @@
           <div class="questionBody">
             <div class="voteArea">
               <div class="upTriangle"></div>
-              <p class="voteNumber">0</p>
+              <p class="voteNumber"><%= question.get('upVotes'); %></p>
               <div class="downTriangle"></div>
             </div>
             <div class="bodyView" id="editor" style="border-style: none;"></div>
@@ -43,37 +43,125 @@
   </div>
 
   <script>
+    console.log('script');
+    if ('<%= currentUserVoteStat %>' == 'upVote') $('.upTriangle').css({'border-bottom-color': 'rgb(42, 100, 166)'});
+    else if ('<%= currentUserVoteStat %>' == 'downVote') $('.downTriangle').css({'border-bottom-color': 'rgb(42, 100, 166)'});
+
+    var updateReputation = function(reputationDelta) {
+      <% console.log('Current reputation for user ' + question.get('user').get('nickName')
+                     + ': ' + question.get('user').get('reputation')); %>
+      $.ajax({
+        type: 'put',
+        headers: {
+            'X-Parse-Application-Id': "Zj9b976AHw3b7SkOgCKzaEjB7bjJoPh2XcyxTcgU",
+            "X-Parse-REST-API-Key": "restkey",
+            'X-Parse-Master-Key': "T5DQ2mT8LNAp0Enn9Y3ERU0iY93sT06PctF6Dt4g"
+        },
+        url: "/parse/users/" + "<%= question.get('user').id %>",
+        data: JSON.stringify({"reputation" : <%= question.get('user').get('reputation') %> + reputationDelta}),
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        success: function(e) {
+          console.log('success');
+        },error: function (xhr, status, error) {
+          console.log('Error: ' + error);
+        }
+      });
+    };
+
+    var updateFeed = function(vote, voteType) {
+      $.ajax({
+        type: 'get',
+        headers: {
+            'X-Parse-Application-Id': "Zj9b976AHw3b7SkOgCKzaEjB7bjJoPh2XcyxTcgU",
+            "X-Parse-REST-API-Key": "restkey",
+            'X-Parse-Master-Key': "T5DQ2mT8LNAp0Enn9Y3ERU0iY93sT06PctF6Dt4g"
+        },
+        url: "/parse/classes/Feeds?",
+        data: "where=" + escape(JSON.stringify({"$relatedTo":{"object":{"__type":"Pointer","className":"Questions","objectId":"<%= question.id %>"},"key":"votes"}})),
+        processData: false,
+        success: function(results) {
+          console.log('success retrieved! ' + JSON.stringify(results));
+        }, error: function (xhr, status, error) {
+          console.log('Error: ' + error);
+        }
+      });
+
+    };
+
+    updateFeed(1, 'this');
+
+    var updateVote = function(voteDelta) {
+      <% console.log('Current vote ' + question.get('upVotes')); %>
+      $.ajax({
+        type: 'put',
+        headers: {
+            'X-Parse-Application-Id': "Zj9b976AHw3b7SkOgCKzaEjB7bjJoPh2XcyxTcgU",
+            "X-Parse-REST-API-Key": "restkey",
+            'X-Parse-Master-Key': "T5DQ2mT8LNAp0Enn9Y3ERU0iY93sT06PctF6Dt4g"
+        },
+        url: "/parse/classes/Questions/" + "<%= question.id %>",
+        data: JSON.stringify({"upVotes" : <%= question.get('upVotes') %> + voteDelta}),
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        success: function(e) {
+          console.log('success');
+        },error: function (xhr, status, error) {
+          console.log('Error: ' + error);
+        }
+      });
+    };
+
     $('.upTriangle').click(function(){
+      var voteDelta = 0;
+      var repDelta = 0;
       if ($('.downTriangle').css('border-top-color') == 'rgb(42, 100, 166)') {
         $('.downTriangle').css({'border-top-color': 'rgb(153, 168, 191)'});
         $('.upTriangle').css({'border-bottom-color': 'rgb(42, 100, 166)'});
         $('.voteNumber').text(parseInt($(".voteNumber").text()) + 2);
+        voteDelta = 2;
+        repDelta = 20;
       } else {
         if ($('.upTriangle').css('border-bottom-color') == "rgb(153, 168, 191)") {
           $('.upTriangle').css({'border-bottom-color': 'rgb(42, 100, 166)'});
           $('.voteNumber').text(parseInt($(".voteNumber").text()) + 1);
+          voteDelta = 1;
+          repDelta = 10;
         } else {
           $('.upTriangle').css({'border-bottom-color': 'rgb(153, 168, 191)'});
           $('.voteNumber').text(parseInt($(".voteNumber").text()) - 1);
+          voteDelta = -1;
+          repDelta = -10;
         }
       }
+      updateReputation(repDelta);
+      updateVote(voteDelta);
     });
 
     $('.downTriangle').click(function(){
+      var voteDelta = 0;
+      var repDelta = 0;
       if ($('.upTriangle').css('border-bottom-color') == 'rgb(42, 100, 166)') {
         $('.upTriangle').css({'border-bottom-color': 'rgb(153, 168, 191)'});
         $('.downTriangle').css({'border-top-color': 'rgb(42, 100, 166)'});
         $('.voteNumber').text(parseInt($(".voteNumber").text()) - 2);
+        voteDelta = -2;
+        repDelta = -20;
       } else {
         if ($('.downTriangle').css('border-top-color') == "rgb(153, 168, 191)") {
           $('.downTriangle').css({'border-top-color': 'rgb(42, 100, 166)'});
           $('.voteNumber').text(parseInt($(".voteNumber").text()) - 1);
+          voteDelta = -1;
+          repDelta = -10;
         } else {
           $('.downTriangle').css({'border-top-color': 'rgb(153, 168, 191)'});
           $('.voteNumber').text(parseInt($(".voteNumber").text()) + 1);
+          voteDelta = 1;
+          repDelta = 10;
         }
       }
-      
+      updateReputation(repDelta);
+      updateVote(voteDelta);
     });
   </script>
 

@@ -8,6 +8,7 @@ var indexRoute     = require('./routes/index.js');
 var questionRoute  = require('./routes/question.js');
 var testRoute      = require('./routes/test.js');
 var flash          = require("connect-flash");
+var stat           = require('./routes/helper.js');
 
 var mountPath = process.env.PARSE_MOUNT || '/parse';
 
@@ -34,7 +35,7 @@ var api = new ParseServer({
 });
 
 // initialize Parse API
-Parse.initialize("Zj9b976AHw3b7SkOgCKzaEjB7bjJoPh2XcyxTcgU");
+Parse.initialize("Zj9b976AHw3b7SkOgCKzaEjB7bjJoPh2XcyxTcgU", "", "T5DQ2mT8LNAp0Enn9Y3ERU0iY93sT06PctF6Dt4g");
 Parse.serverURL = process.env.SERVER_URL || 'http://localhost:1337/parse';
 
 var app = express();
@@ -68,6 +69,7 @@ app.use(methodOverride('_method'));
 app.use(indexRoute);
 app.use(testRoute);
 app.use(questionRoute);
+app.use(stat);
 
 var port = process.env.PORT || 1337;
 var httpServer = require('http').createServer(app);
