@@ -328,3 +328,35 @@
   font-weight: 400;
   color: rgb(113, 128, 151);
 }
+
+.author {
+  margin-top: 10px;
+  float: right;
+  display: block;
+  padding-right: 20px;
+  padding-bottom: 10px;
+}
+
+.timeStampQuestion {
+  font-family: Open Sans; 
+  font-size: 12px; 
+  font-weight: 400;
+  color: rgb(122, 135, 157);
+  margin-bottom: 5px;
+}
+
+.authorName {
+  margin-bottom: 0px; 
+  font-family: Open Sans; 
+  font-size: 14px; 
+  font-weight: 400;
+  color: rgb(53, 111, 177);
+}
+
+.reputation {
+  margin-bottom: 0px; 
+  font-family: Open Sans; 
+  font-size: 14px; 
+  font-weight: 600;
+  color: rgb(102, 115, 137);
+}

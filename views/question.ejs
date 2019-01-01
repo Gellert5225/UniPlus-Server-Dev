@@ -21,7 +21,7 @@
             <%= question.get('title'); %>
           </p>
         </div>
-        <div style="border-bottom: 1px solid #e4e4e4;">
+        <div style="border-bottom: 1px solid #e4e4e4; overflow: hidden;">
           <div class="questionBody">
             <div class="voteArea">
               <div class="upTriangle"></div>
@@ -29,6 +29,16 @@
               <div class="downTriangle"></div>
             </div>
             <div class="bodyView" id="editor" style="border-style: none;"></div>
+          </div>
+          <div class="author">
+            <p class="timeStampQuestion">Asked <%= question.get('createdAt').toLocaleDateString("en-US", { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }) %></p>
+            <div class="authorInfo" style="overflow: hidden; padding-left: 5px;">
+              <img style="width: 40px; height: 40px;" src="<%= question.get('user').get('profilePhoto80').url() %>">
+              <div style="display: inline-block; vertical-align: top;">
+                <p class="authorName"><%= question.get('user').get('nickName') %></p>
+                <p class="reputation">100</p>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -43,13 +53,37 @@
   </div>
 
   <script>
+    $(document).ready(function() {
+      const _MS_PER_HOUR = 1000 * 60 * 60;
+
+      var date = new Date("<%= question.get('createdAt') %>");
+      var now = new Date();
+      const utc1 = Date.UTC(date.getFullYear(), date.getMonth(), date.getDate());
+      const utc2 = Date.UTC(now.getFullYear(), now.getMonth(), now.getDate());
+      var hourDiff = Math.floor((utc2 - utc1) / _MS_PER_HOUR);
+      var secondDiff = Math.floor((utc2 - utc1) / 1000);
+
+      var localDateHM = date.toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: false });
+      var localDateFull = date.toLocaleDateString("en-US", { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+
+      if (secondDiff < 60) {
+        $(".timeStampQuestion").text("Asked Just Now");
+      } else {
+        if (hourDiff < 24) {
+          $(".timeStampQuestion").text("Asked " + localDateHM);
+        } else {
+          $(".timeStampQuestion").text("Asked " + localDateFull);
+        }
+      }
+    });
+  </script>
+
+  <script>
     console.log("<%= question.get('user').id %>");
     if ('<%= currentUserVoteStat %>' == 'upVote') $('.upTriangle').css({'border-bottom-color': 'rgb(42, 100, 166)'});
     else if ('<%= currentUserVoteStat %>' == 'downVote') $('.downTriangle').css({'border-top-color': 'rgb(42, 100, 166)'});
 
     var updateReputation = function(reputationDelta) {
-      <% console.log('Current reputation for user ' + question.get('user').get('nickName')
-                     + ': ' + question.get('user').get('reputation')); %>
       $.ajax({
         type: 'put',
         headers: {
@@ -179,7 +213,6 @@
     };
 
     var updateVote = function(voteDelta) {
-      <% console.log('Current vote ' + question.get('upVotes')); %>
       $.ajax({
         type: 'put',
         headers: {
@@ -271,7 +304,7 @@
       placeholder: 'What\'s your question? Be specific...'
     });
 
-    $( document ).ready(function() {
+    $(document).ready(function() {
       var text = $('#sample').text();
       quill.root.innerHTML = text.substring(5, text.length - 3);
     });
