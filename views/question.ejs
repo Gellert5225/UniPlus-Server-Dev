@@ -24,23 +24,45 @@
         <div style="border-bottom: 1px solid #e4e4e4; overflow: hidden;">
           <div class="questionBody">
             <div class="voteArea">
-              <div class="upTriangle"></div>
-              <p class="voteNumber"><%= question.get('upVotes'); %></p>
-              <div class="downTriangle"></div>
+              <div class="upTriangle questionUpTriangle"></div>
+              <p class="voteNumber questionVote"><%= question.get('upVotes'); %></p>
+              <div class="downTriangle questionDownTriangle"></div>
             </div>
             <div class="bodyView" id="editor" style="border-style: none;"></div>
           </div>
           <div class="author">
-            <p class="timeStampQuestion">Asked <%= question.get('createdAt').toLocaleDateString("en-US", { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }) %></p>
+            <p class="timeStampQuestion">Asked</p>
             <div class="authorInfo" style="overflow: hidden; padding-left: 5px;">
-              <img style="width: 40px; height: 40px;" src="<%= question.get('user').get('profilePhoto80').url() %>">
+              <img style="width: 40px; height: 40px; cursor: pointer;" src="<%= question.get('user').get('profilePhoto80').url() %>">
               <div style="display: inline-block; vertical-align: top;">
                 <p class="authorName"><%= question.get('user').get('nickName') %></p>
-                <p class="reputation">100</p>
+                <p class="reputation"><%= question.get('user').get('reputation') %></p>
               </div>
             </div>
           </div>
         </div>
+        <% answers.forEach((answer, index)=>{ %>
+          <div style="border-bottom: 1px solid #e4e4e4; overflow: hidden;">
+            <div class="questionBody">
+              <div class="voteArea">
+                <div class="upTriangle answerUpTriangle<%= index %>"></div>
+                <p class="voteNumber answerVote<%= index %>"><%= answer.answer.get('upVotes'); %></p>
+                <div class="downTriangle answerDownTriangle<%= index %>"></div>
+              </div>
+              <div class="bodyView" id="answerView<%= index %>" style="border-style: none;"></div>
+            </div>
+            <div class="author">
+              <p class="timeStampQuestion timeStampAnswer<%= index %>">Answered</p>
+              <div class="authorInfo" style="overflow: hidden; padding-left: 5px;">
+                <img style="width: 40px; height: 40px; cursor: pointer;" src="<%= answer.answer.get('author').get('profilePhoto80').url() %>">
+                <div style="display: inline-block; vertical-align: top;">
+                  <p class="authorName"><%= answer.answer.get('author').get('nickName') %></p>
+                  <p class="reputation"><%= answer.answer.get('author').get('reputation') %></p>
+                </div>
+              </div>
+            </div>
+          </div>
+        <% }); %>
       </div>
       <div class="col" id="rightCol">
         3 of 3
@@ -79,11 +101,10 @@
   </script>
 
   <script>
-    console.log("<%= question.get('user').id %>");
-    if ('<%= currentUserVoteStat %>' == 'upVote') $('.upTriangle').css({'border-bottom-color': 'rgb(42, 100, 166)'});
-    else if ('<%= currentUserVoteStat %>' == 'downVote') $('.downTriangle').css({'border-top-color': 'rgb(42, 100, 166)'});
+    if ('<%= currentUserVoteStat %>' == 'upVote') $('.questionUpTriangle').css({'border-bottom-color': 'rgb(42, 100, 166)'});
+    else if ('<%= currentUserVoteStat %>' == 'downVote') $('.questionDownTriangle').css({'border-top-color': 'rgb(42, 100, 166)'});
 
-    var updateReputation = function(reputationDelta) {
+    var updateReputation = function(reputationDelta, currentRep, userId) {
       $.ajax({
         type: 'put',
         headers: {
@@ -91,8 +112,8 @@
             "X-Parse-REST-API-Key": "restkey",
             'X-Parse-Master-Key': "T5DQ2mT8LNAp0Enn9Y3ERU0iY93sT06PctF6Dt4g"
         },
-        url: "/parse/users/" + "<%= question.get('user').id %>",
-        data: JSON.stringify({"reputation" : <%= question.get('user').get('reputation') %> + reputationDelta}),
+        url: "/parse/users/" + userId,
+        data: JSON.stringify({"reputation" : currentRep + reputationDelta}),
         contentType: "application/json; charset=utf-8",
         dataType: "json",
         success: function(e) {
@@ -103,8 +124,27 @@
       });
     };
 
-    var updateFeed = function(vote, voteType) {
-      if (voteType == 'upVote' || voteType == 'downVote') {
+    var updateFeed = function(vote, voteType, toUserId, objectId, objectType) {
+      console.log(objectType);
+      if (voteType == 'newUpVote' || voteType == 'newDownVote') {
+        var jsonString;
+        if (objectType == "Questions") {
+          jsonString = {"type" : voteType == 'newUpVote' ? 'upVote' : 'downVote', "fromUser": {
+                                                    "__type":"Pointer","className":"_User","objectId":"<%= currentUser.id %>"
+                                                  }, "toUser": {
+                                                    "__type":"Pointer","className":"_User","objectId":toUserId
+                                                  }, "toQuestion": {
+                                                    "__type":"Pointer","className":"Questions","objectId":"<%= question.id %>"
+                                                  }};
+        } else if (objectType == "Answers") {
+          jsonString = {"type" : voteType == 'newUpVote' ? 'upVote' : 'downVote', "fromUser": {
+                                                    "__type":"Pointer","className":"_User","objectId":"<%= currentUser.id %>"
+                                                  }, "toUser": {
+                                                    "__type":"Pointer","className":"_User","objectId":toUserId
+                                                  }, "toAnswer": {
+                                                    "__type":"Pointer","className":"Answers","objectId":objectId
+                                                  }};
+        }
         $.ajax({
           type: 'post',
           headers: {
@@ -113,13 +153,7 @@
               'X-Parse-Master-Key': "T5DQ2mT8LNAp0Enn9Y3ERU0iY93sT06PctF6Dt4g"
           },
           url: "/parse/classes/Feeds",
-          data: JSON.stringify({"type" : voteType, "fromUser": {
-                                                   "__type":"Pointer","className":"_User","objectId":"<%= currentUser.id %>"
-                                                 }, "toUser": {
-                                                   "__type":"Pointer","className":"_User","objectId":"<%= question.get('user').id %>"
-                                                 }, "toQuestion": {
-                                                   "__type":"Pointer","className":"Questions","objectId":"<%= question.id %>"
-                                                 }}),
+          data: JSON.stringify(jsonString),
           contentType: "application/json; charset=utf-8",
           dataType: "json",
           success: function(e) {
@@ -131,12 +165,12 @@
                   "X-Parse-REST-API-Key": "restkey",
                   'X-Parse-Master-Key': "T5DQ2mT8LNAp0Enn9Y3ERU0iY93sT06PctF6Dt4g"
               },
-              url: "/parse/classes/Questions/" + "<%= question.id %>",
+              url: "/parse/classes/" + objectType + "/" + objectId,
               data: JSON.stringify({"votes": {"__op": "AddRelation", "objects":[{"__type":"Pointer","className":"Feeds","objectId":e.objectId}]}}),
               contentType: "application/json; charset=utf-8",
               dataType: "json",
               success: function(f) {
-                console.log('saved feed ' + e.objectId + ' to question: ' + "<%= question.id %>" + ' ' + JSON.stringify(f));
+                console.log('saved feed ' + e.objectId + ' to' + objectType + ': ' + objectId + ' ' + JSON.stringify(f));
               },error: function (xhr, status, error) {
                 console.log('Error: ' + error);
               }
@@ -146,6 +180,30 @@
           }
         });
       } else {
+        var jsonString;
+        if (objectType == "Questions") {
+          jsonString = {"$relatedTo":{
+                          "object":{
+                            "__type":"Pointer","className":"Questions","objectId":"<%= question.id %>"
+                          },"key":"votes"
+                        }, "fromUser": {
+                          "__type":"Pointer","className":"_User","objectId":"<%= currentUser.id %>"
+                        },"toQuestion": {
+                          "__type":"Pointer","className":"Questions","objectId":"<%= question.id %>"
+                        }
+                      };
+        } else if (objectType == "Answers") {
+          jsonString = {"$relatedTo":{
+                          "object":{
+                            "__type":"Pointer","className":"Answers","objectId":objectId
+                          },"key":"votes"
+                        }, "fromUser": {
+                          "__type":"Pointer","className":"_User","objectId":"<%= currentUser.id %>"
+                        },"toAnswer": {
+                          "__type":"Pointer","className":"Answers","objectId":objectId
+                        }
+                      };
+        }
         $.ajax({
           type: 'get',
           headers: {
@@ -154,22 +212,13 @@
               'X-Parse-Master-Key': "T5DQ2mT8LNAp0Enn9Y3ERU0iY93sT06PctF6Dt4g"
           },
           url: "/parse/classes/Feeds?",
-          data: "where=" + escape(JSON.stringify({"$relatedTo":{
-                                                   "object":{
-                                                     "__type":"Pointer","className":"Questions","objectId":"<%= question.id %>"
-                                                   },"key":"votes"
-                                                 }, "fromUser": {
-                                                   "__type":"Pointer","className":"_User","objectId":"<%= currentUser.id %>"
-                                                 },"toQuestion": {
-                                                   "__type":"Pointer","className":"Questions","objectId":"<%= question.id %>"
-                                                 }
-                                                 })),
+          data: "where=" + escape(JSON.stringify(jsonString)),
           processData: false,
           success: function(results) {
             var array = results.results;
             console.log('success retrieved ' + array.length + ' Feeds!' + ' ' + JSON.stringify(array));
             if (array.length) {
-              if ((voteType == 'up' && vote == -1) || (voteType == 'down' && vote == 1)) {
+              if ((voteType == 'upVote' && vote == -1) || (voteType == 'downVote' && vote == 1)) {
                 $.ajax({
                   type: 'delete',
                   headers: {
@@ -184,7 +233,7 @@
                     console.log('Error: ' + error);
                   }
                 });
-              } else if ((voteType == 'up' && vote == 2) || (voteType == 'down' && vote == -2)) {
+              } else if ((voteType == 'upVote' && vote == 2) || (voteType == 'downVote' && vote == -2)) {
                 $.ajax({
                   type: 'put',
                   headers: {
@@ -192,7 +241,7 @@
                       "X-Parse-REST-API-Key": "restkey",
                       'X-Parse-Master-Key': "T5DQ2mT8LNAp0Enn9Y3ERU0iY93sT06PctF6Dt4g"
                   },
-                  data: voteType == 'up' ? JSON.stringify({"type" : "upVote"}) : JSON.stringify({"type" : "downVote"}),
+                  data: voteType == 'upVote' ? JSON.stringify({"type" : "upVote"}) : JSON.stringify({"type" : "downVote"}),
                   contentType: "application/json; charset=utf-8",
                   dataType: "json",
                   url: "/parse/classes/Feeds/" + array[0].objectId,
@@ -212,7 +261,7 @@
 
     };
 
-    var updateVote = function(voteDelta) {
+    var updateVote = function(voteDelta, currentVote, parseClass, objectId) {
       $.ajax({
         type: 'put',
         headers: {
@@ -220,8 +269,8 @@
             "X-Parse-REST-API-Key": "restkey",
             'X-Parse-Master-Key': "T5DQ2mT8LNAp0Enn9Y3ERU0iY93sT06PctF6Dt4g"
         },
-        url: "/parse/classes/Questions/" + "<%= question.id %>",
-        data: JSON.stringify({"upVotes" : <%= question.get('upVotes') %> + voteDelta}),
+        url: "/parse/classes/"+ parseClass + "/" + objectId,
+        data: JSON.stringify({"upVotes" : currentVote + voteDelta}),
         contentType: "application/json; charset=utf-8",
         dataType: "json",
         success: function(e) {
@@ -232,67 +281,133 @@
       });
     };
 
-    $('.upTriangle').click(function(){
+    $('.questionUpTriangle').click(function(){
       var voteDelta = 0;
       var repDelta = 0;
       var voteType;
-      if ($('.downTriangle').css('border-top-color') == 'rgb(42, 100, 166)') {
-        $('.downTriangle').css({'border-top-color': 'rgb(153, 168, 191)'});
-        $('.upTriangle').css({'border-bottom-color': 'rgb(42, 100, 166)'});
-        $('.voteNumber').text(parseInt($(".voteNumber").text()) + 2);
+      if ($('.questionDownTriangle').css('border-top-color') == 'rgb(42, 100, 166)') {
+        $('.questionDownTriangle').css({'border-top-color': 'rgb(153, 168, 191)'});
+        $('.questionUpTriangle').css({'border-bottom-color': 'rgb(42, 100, 166)'});
+        $('.questionVote').text(parseInt($(".questionVote").text()) + 2);
         voteDelta = 2;
         repDelta = 20;
-        voteType = 'up';
+        voteType = 'upVote';
       } else {
-        if ($('.upTriangle').css('border-bottom-color') == "rgb(153, 168, 191)") {
-          $('.upTriangle').css({'border-bottom-color': 'rgb(42, 100, 166)'});
-          $('.voteNumber').text(parseInt($(".voteNumber").text()) + 1);
+        if ($('.questionUpTriangle').css('border-bottom-color') == "rgb(153, 168, 191)") {
+          $('.questionUpTriangle').css({'border-bottom-color': 'rgb(42, 100, 166)'});
+          $('.questionVote').text(parseInt($(".questionVote").text()) + 1);
           voteDelta = 1;
           repDelta = 10;
-          voteType = 'upVote';
+          voteType = 'newUpVote';
         } else {
-          $('.upTriangle').css({'border-bottom-color': 'rgb(153, 168, 191)'});
-          $('.voteNumber').text(parseInt($(".voteNumber").text()) - 1);
+          $('.questionUpTriangle').css({'border-bottom-color': 'rgb(153, 168, 191)'});
+          $('.questionVote').text(parseInt($(".questionVote").text()) - 1);
           voteDelta = -1;
           repDelta = -10;
-          voteType = 'up';
+          voteType = 'upVote';
         }
       }
-      updateFeed(voteDelta, voteType);
-      updateReputation(repDelta);
-      updateVote(voteDelta);
+      updateFeed(voteDelta, voteType, "<%= question.get('user').id %>", "<%= question.id %>", "Questions");
+      updateReputation(repDelta, <%= question.get('user').get('reputation') %>, "<%= question.get('user').id %>");
+      updateVote(voteDelta, <%= question.get('upVotes') %>, "Questions", "<%= question.id %>");
     });
 
-    $('.downTriangle').click(function(){
+    $('.questionDownTriangle').click(function(){
       var voteDelta = 0;
       var repDelta = 0;
       var voteType;
-      if ($('.upTriangle').css('border-bottom-color') == 'rgb(42, 100, 166)') {
-        $('.upTriangle').css({'border-bottom-color': 'rgb(153, 168, 191)'});
-        $('.downTriangle').css({'border-top-color': 'rgb(42, 100, 166)'});
-        $('.voteNumber').text(parseInt($(".voteNumber").text()) - 2);
+      if ($('.questionUpTriangle').css('border-bottom-color') == 'rgb(42, 100, 166)') {
+        $('.questionUpTriangle').css({'border-bottom-color': 'rgb(153, 168, 191)'});
+        $('.questionDownTriangle').css({'border-top-color': 'rgb(42, 100, 166)'});
+        $('.questionVote').text(parseInt($(".questionVote").text()) - 2);
         voteDelta = -2;
         repDelta = -20;
-        var voteType = 'down';
+        var voteType = 'downVote';
       } else {
-        if ($('.downTriangle').css('border-top-color') == "rgb(153, 168, 191)") {
-          $('.downTriangle').css({'border-top-color': 'rgb(42, 100, 166)'});
-          $('.voteNumber').text(parseInt($(".voteNumber").text()) - 1);
+        if ($('.questionDownTriangle').css('border-top-color') == "rgb(153, 168, 191)") {
+          $('.questionDownTriangle').css({'border-top-color': 'rgb(42, 100, 166)'});
+          $('.questionVote').text(parseInt($(".questionVote").text()) - 1);
           voteDelta = -1;
           repDelta = -10;
-          var voteType = 'downVote';
+          var voteType = 'newDownVote';
         } else {
-          $('.downTriangle').css({'border-top-color': 'rgb(153, 168, 191)'});
-          $('.voteNumber').text(parseInt($(".voteNumber").text()) + 1);
+          $('.questionDownTriangle').css({'border-top-color': 'rgb(153, 168, 191)'});
+          $('.questionVote').text(parseInt($(".questionVote").text()) + 1);
           voteDelta = 1;
           repDelta = 10;
-          var voteType = 'down';
+          var voteType = 'downVote';
         }
       }
-      updateFeed(voteDelta, voteType);
-      updateReputation(repDelta);
-      updateVote(voteDelta);
+      updateFeed(voteDelta, voteType, "<%= question.get('user').id %>", "<%= question.id %>", "Questions");
+      updateReputation(repDelta, <%= question.get('user').get('reputation') %>, "<%= question.get('user').id %>");
+      updateVote(voteDelta, <%= question.get('upVotes') %>, "Questions", "<%= question.id %>");
     });
+
+    <% answers.forEach((answer, index)=>{ %>
+      $('.answerUpTriangle<%= index %>').click(function(){
+        var voteDelta = 0;
+        var repDelta = 0;
+        var voteType;
+        if ($('.answerDownTriangle<%= index %>').css('border-top-color') == 'rgb(42, 100, 166)') {
+          $('.answerDownTriangle<%= index %>').css({'border-top-color': 'rgb(153, 168, 191)'});
+          $('.answerUpTriangle<%= index %>').css({'border-bottom-color': 'rgb(42, 100, 166)'});
+          $('.answerVote<%= index %>').text(parseInt($(".answerVote<%= index %>").text()) + 2);
+          voteDelta = 2;
+          repDelta = 20;
+          voteType = 'upVote';
+        } else {
+          if ($('.answerUpTriangle<%= index %>').css('border-bottom-color') == "rgb(153, 168, 191)") {
+            $('.answerUpTriangle<%= index %>').css({'border-bottom-color': 'rgb(42, 100, 166)'});
+            $('.answerVote<%= index %>').text(parseInt($(".answerVote<%= index %>").text()) + 1);
+            voteDelta = 1;
+            repDelta = 10;
+            voteType = 'newUpVote';
+          } else {
+            $('.answerUpTriangle<%= index %>').css({'border-bottom-color': 'rgb(153, 168, 191)'});
+            $('.answerVote<%= index %>').text(parseInt($(".answerVote<%= index %>").text()) - 1);
+            voteDelta = -1;
+            repDelta = -10;
+            voteType = 'upVote';
+          }
+        }
+
+        console.log("<%= answer.answer.id %>");
+        updateFeed(voteDelta, voteType, "<%= answer.answer.get('author').id %>", "<%= answer.answer.id %>", "Answers");
+        updateReputation(repDelta, <%= answer.answer.get('author').get('reputation') %>, "<%= answer.answer.get('author').id %>");
+        updateVote(voteDelta, <%= answer.answer.get('upVotes') %>, "Answers", "<%= answer.answer.id %>");
+      });
+
+      $('.answerDownTriangle<%= index %>').click(function(){
+        var voteDelta = 0;
+        var repDelta = 0;
+        var voteType;
+        if ($('.answerUpTriangle<%= index %>').css('border-bottom-color') == 'rgb(42, 100, 166)') {
+          $('.answerUpTriangle<%= index %>').css({'border-bottom-color': 'rgb(153, 168, 191)'});
+          $('.answerDownTriangle<%= index %>').css({'border-top-color': 'rgb(42, 100, 166)'});
+          $('.answerVote<%= index %>').text(parseInt($(".answerVote<%= index %>").text()) - 2);
+          voteDelta = -2;
+          repDelta = -20;
+          var voteType = 'downVote';
+        } else {
+          if ($('.answerDownTriangle<%= index %>').css('border-top-color') == "rgb(153, 168, 191)") {
+            $('.answerDownTriangle<%= index %>').css({'border-top-color': 'rgb(42, 100, 166)'});
+            $('.answerVote<%= index %>').text(parseInt($(".answerVote<%= index %>").text()) - 1);
+            voteDelta = -1;
+            repDelta = -10;
+            var voteType = 'newDownVote';
+          } else {
+            $('.answerDownTriangle<%= index %>').css({'border-top-color': 'rgb(153, 168, 191)'});
+            $('.answerVote<%= index %>').text(parseInt($(".answerVote<%= index %>").text()) + 1);
+            voteDelta = 1;
+            repDelta = 10;
+            var voteType = 'downVote';
+          }
+        }
+        updateFeed(voteDelta, voteType, "<%= answer.answer.get('author').id %>", "<%= answer.answer.id %>", "Answers");
+        updateReputation(repDelta, <%= answer.answer.get('author').get('reputation') %>, "<%= answer.answer.get('author').id %>");
+        updateVote(voteDelta, <%= answer.answer.get('upVotes') %>, "Answers", "<%= answer.answer.id %>");
+      });
+    <% }); %>
   </script>
 
   <script>
@@ -300,14 +415,53 @@
       modules: {
         toolbar: null
       },
-      theme: 'snow',
-      placeholder: 'What\'s your question? Be specific...'
+      theme: 'snow'
     });
+    quill.enable(false);
 
     $(document).ready(function() {
       var text = $('#sample').text();
       quill.root.innerHTML = text.substring(5, text.length - 3);
     });
+
+    <% answers.forEach((answer, index)=>{ %>
+      if ('<%= answer.currentUserVote %>' == 'upVote') $('.answerUpTriangle<%= index %>').css({'border-bottom-color': 'rgb(42, 100, 166)'});
+      else if ('<%= answer.currentUserVote %>' == 'downVote') $('.answerDownTriangle<%= index %>').css({'border-top-color': 'rgb(42, 100, 166)'});
+      var quillAnswer = new Quill('#answerView'+'<%= index %>', {
+        modules: {
+          toolbar: null
+        },
+        theme: 'snow'
+      });
+      quillAnswer.enable(false);
+      quillAnswer.root.innerHTML = `<%= answer.answer.get('body') %>`;
+
+      $(document).ready(function() {
+        const _MS_PER_HOUR = 1000 * 60 * 60;
+
+        var date = new Date("<%= answer.answer.get('createdAt') %>");
+        var now = new Date();
+        const utc1 = Date.UTC(date.getFullYear(), date.getMonth(), date.getDate());
+        const utc2 = Date.UTC(now.getFullYear(), now.getMonth(), now.getDate());
+        var hourDiff = Math.floor((utc2 - utc1) / _MS_PER_HOUR);
+        var secondDiff = Math.floor((utc2 - utc1) / 1000);
+
+        var localDateHM = date.toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: false });
+        var localDateFull = date.toLocaleDateString("en-US", { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+
+        if (secondDiff < 60) {
+          $(".timeStampAnswer<%= index %>").text("Answered Just Now");
+        } else {
+          if (hourDiff < 24) {
+            $(".timeStampAnswer<%= index %>").text("Answered " + localDateHM);
+          } else {
+            $(".timeStampAnswer<%= index %>").text("Answered " + localDateFull);
+          }
+        }
+      });
+
+    <% }); %>
+    
   </script>
 
 <% include ./partials/footer.ejs %>
