@@ -77,14 +77,31 @@
     var title = $('#titleEditor').text();
     var body = $('#editor .ql-editor').html();
     $.ajax({
-      type: 'POST',
-      url: '/postQuestion',
-      data: {"title": title, "body": body},
-      dataType: 'text',
-      success: function(data) {
-          window.location = data;
-      },error: function (xhr, status, error) {
-        console.log('Error: ' + error);
+      type: 'post',
+      headers: {
+          'X-Parse-Application-Id': "Zj9b976AHw3b7SkOgCKzaEjB7bjJoPh2XcyxTcgU",
+          "X-Parse-REST-API-Key": "restkey",
+          'X-Parse-Master-Key': "T5DQ2mT8LNAp0Enn9Y3ERU0iY93sT06PctF6Dt4g"
+      },
+      url: "/parse/classes/Questions",
+      data: JSON.stringify({"solved": false, 
+                            "user": {"__type":"Pointer","className":"_User","objectId":"<%= currentUser.id %>"},
+                            "upVotes": 0,
+                            "views": 0,
+                            "numberOfComments": 0,
+                            "bodyRaw": body,
+                            "body": body,
+                            "title": title,
+                            "numberOfFavs": 0,
+                            "markedUsers": [],
+                            "tagArray": []}),
+      contentType: "application/json; charset=utf-8",
+      dataType: "json",
+      success: function(result) {
+        console.log('Posted a question ' + result.objectId);
+        window.location = 'questions/' + result.objectId;
+      }, error: function (xhr, status, error) {
+        console.log(error);
       }
     });
   });
