@@ -6,7 +6,7 @@
         
       </div>
     </div>
-    <div class="col-7" id="midCol">
+    <div class="col-8" id="midCol">
       <div id="composeArea" style="padding: 20px;">
         <div>
           <h3>Ask A Question</h3>
@@ -82,7 +82,6 @@
       data: {"title": title, "body": body},
       dataType: 'text',
       success: function(data) {
-          console.log(data);
           window.location = data;
       },error: function (xhr, status, error) {
         console.log('Error: ' + error);

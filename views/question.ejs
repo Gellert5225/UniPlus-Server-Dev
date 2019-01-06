@@ -14,7 +14,7 @@
           
         </div>
       </div>
-      <div class="col-7" id="midCol">
+      <div class="col-8" id="midCol">
         <div class="titleWrapper">
           <p style="display: inline-block; font-family:Open Sans; font-size: 25px; 
                     font-weight: 400; margin-left: 30px; padding-top: 15px; height: 50%; ">
@@ -30,6 +30,13 @@
             </div>
             <div class="bodyView" id="editor" style="border-style: none;"></div>
           </div>
+          <% if(question.get('tagArray').length) { %>
+            <div class="tagArea" style="margin-left: 68px;">
+              <% question.get('tagArray').forEach((tag, index) => { %>
+                <div class="tag"><p class="tagText"><%= tag %></p></div>
+              <% }); %>
+            </div>
+          <% } %>
           <div class="author">
             <p class="timeStampQuestion">Asked</p>
             <div class="authorInfo" style="overflow: hidden; padding-left: 5px;">
@@ -86,7 +93,7 @@
       var secondDiff = Math.floor((utc2 - utc1) / 1000);
 
       var localDateHM = date.toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: false });
-      var localDateFull = date.toLocaleDateString("en-US", { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+      var localDateFull = date.toLocaleDateString("en-US", { year: 'numeric', month: 'long', day: 'numeric' });
 
       if (secondDiff < 60) {
         $(".timeStampQuestion").text("Asked Just Now");
@@ -447,7 +454,7 @@
         var secondDiff = Math.floor((utc2 - utc1) / 1000);
 
         var localDateHM = date.toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: false });
-        var localDateFull = date.toLocaleDateString("en-US", { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+        var localDateFull = date.toLocaleDateString("en-US", { year: 'numeric', month: 'long', day: 'numeric' });
 
         if (secondDiff < 60) {
           $(".timeStampAnswer<%= index %>").text("Answered Just Now");

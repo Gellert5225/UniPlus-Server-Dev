@@ -14,7 +14,7 @@
           
         </div>
       </div>
-      <div class="col-7" id="midCol">
+      <div class="col-8" id="midCol">
         <div id="header">
           <p style="display: inline-block; font-family:Open Sans; font-size: 25px; 
                     font-weight: 400; margin-left: 30px; padding-top: 15px; height: 50%; 
@@ -72,6 +72,13 @@
                   <a href="/questions/<%= question.id; %>" style="text-decoration: none;">
                     <p class="questionTitle"> <%= question.get('title'); %> </p>
                   </a>
+                  <% if(question.get('tagArray').length) { %>
+                    <div class="tagArea">
+                      <% question.get('tagArray').forEach((tag, index) => { %>
+                        <div class="tag"><p class="tagText"><%= tag %></p></div>
+                      <% }); %>
+                    </div>
+                  <% } %>
                 </div>
               </div>
 

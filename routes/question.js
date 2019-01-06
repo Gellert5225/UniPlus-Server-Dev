@@ -4,7 +4,7 @@ var router = express.Router();
 
 var answerSchema = {
   answer: Parse.Object,
-  currentUserVote: String
+  currentUserVote: String,
 };
 
 router.get("/questions", function(req,res){ // display all questions
