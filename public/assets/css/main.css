@@ -333,7 +333,7 @@
 }
 
 .author {
-  width: 250px;
+  width: 200px;
   margin-top: 10px;
   float: right;
   display: block;
@@ -375,20 +375,26 @@
   margin-right: 2px;
   height: 20px;
   display: inline-block;
-  background-color: rgb(243, 245, 249);
+  background-color: rgb(225, 236, 244);
   border-style: solid;
   border-width: 1px;
-  border-color: rgb(217, 223, 232);
+  border-color: rgb(225, 236, 244);
   border-radius: 3px;
   justify-content: center;
   align-items: center;
   overflow: hidden;
+  cursor: pointer;
 }
 
 .tagText {
-  color: rgb(111, 126, 149);
+  color: rgb(57, 115, 157);
   padding: 0px 10px;
   font-family: Open Sans; 
   font-size: 12px; 
   font-weight: 400;
+}
+
+.tag:hover {
+  background-color: rgb(205, 224, 237);
+  border-color: rgb(205, 224, 237);
 }
