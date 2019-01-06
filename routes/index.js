@@ -57,7 +57,16 @@ router.get('/ask', function(req, res) {
     req.flash('askError', 'You need to log in to post a question');
     res.redirect('back');
   } else {
-    res.status(200).render('askQuestion');
+    const Tag = Parse.Object.extend("Tag");
+    const query = new Parse.Query(Tag);
+    query.ascending('name');
+    query.find({
+      success: function(results) {
+        res.status(200).render('askQuestion', { availableTags: results });
+      }, error: function(error) {
+        console.log(error);
+      }
+    });
   }
 });
 

@@ -22,6 +22,15 @@
           <h6>Body</h6>
           <div id="editor" style="height: 500px; border-bottom-left-radius: 5px; border-bottom-right-radius: 5px;">
           </div>
+          <br>
+        </div>
+        <div>
+          <h6>Tag</h6>
+          <div id="tagEditor" class="tagEditor" style="border-radius: 5px;">
+          </div>
+        </div>
+        <div id="tagPreview" style="margin-top: 10px; margin-bottom: 10px;">
+          
         </div>
         <div>
           <button type="submit" class="btn btn-primary" id="postBtn">
@@ -39,41 +48,78 @@
 <script>
 </script>
 
-  <script>
-    var toolbarOptions = [
-      ['bold', 'italic', 'underline', 'strike'],        // toggled buttons
-      ['blockquote', 'code-block'],
+<script>
+  var toolbarOptions = [
+    ['bold', 'italic', 'underline', 'strike'],        // toggled buttons
+    ['blockquote', 'code-block'],
 
-      [{ 'header': 1 }, { 'header': 2 }],               // custom button values
-      [{ 'list': 'ordered'}, { 'list': 'bullet' }],
-      [{ 'script': 'sub'}, { 'script': 'super' }],      // superscript/subscript
-      [{ 'indent': '-1'}, { 'indent': '+1' }],          // outdent/indent
+    [{ 'header': 1 }, { 'header': 2 }],               // custom button values
+    [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+    [{ 'script': 'sub'}, { 'script': 'super' }],      // superscript/subscript
+    [{ 'indent': '-1'}, { 'indent': '+1' }],          // outdent/indent
 
-      [{ 'align': [] }],
+    [{ 'align': [] }],
 
-      ['image']
-    ];
+    ['image']
+  ];
 
-    var icons = Quill.import('ui/icons');
-    icons['codeBlock'] = '<img src="../public/assets/images/codeBlock.png">';
+  var icons = Quill.import('ui/icons');
+  icons['codeBlock'] = '<img src="../public/assets/images/codeBlock.png">';
 
-    var quill = new Quill('#editor', {
-      modules: {
-        toolbar: toolbarOptions
-      },
-      theme: 'snow',
-      placeholder: 'Compose your question...'
-    });
+  var quill = new Quill('#editor', {
+    modules: {
+      toolbar: toolbarOptions
+    },
+    theme: 'snow',
+    placeholder: 'Compose your question...'
+  });
 
-    var quillTitle = new Quill('#titleEditor', {
-      modules: {
-        toolbar: null
-      },
-      theme: 'snow',
-      placeholder: 'What\'s your question? Be specific...'
-    });
+  var quillTitle = new Quill('#titleEditor', {
+    modules: {
+      toolbar: null
+    },
+    theme: 'snow',
+    placeholder: 'What\'s your question? Be specific...'
+  });
 
-    $('#postBtn').click(function(){
+  var tags = [];
+  
+  var bindings = {
+    enter: {
+      key: 13,
+      handler: function(range, context) {
+        tags.push(context.prefix);
+        console.log(tags);
+        $newEl = $('<div class="tag" style="margin-right: 5px;"><p class="tagText">' + context.prefix + '</p></div>');
+        $newEl.on("click", function(){
+          $(this).remove();
+          tags = tags.filter(item => item !== context.prefix);
+          console.log(tags);
+        });
+        $('#tagPreview').append($newEl);
+        this.quill.deleteText(range.index - range.index, range.index);
+      }
+    }
+  };
+
+  var quillTag = new Quill('#tagEditor', {
+    modules: {
+      toolbar: null,
+      keyboard: {
+        bindings: bindings
+      }
+    },
+    theme: 'snow',
+    placeholder: 'Start typing and press enter to add a tag'
+  });
+
+  quillTag.keyboard.addBinding({
+    key: ' ',
+    handler: function(range, context) {      
+    }
+  });
+
+  $('#postBtn').click(function(){
     var title = $('#titleEditor').text();
     var body = $('#editor .ql-editor').html();
     $.ajax({
@@ -94,7 +140,7 @@
                             "title": title,
                             "numberOfFavs": 0,
                             "markedUsers": [],
-                            "tagArray": []}),
+                            "tagArray": tags}),
       contentType: "application/json; charset=utf-8",
       dataType: "json",
       success: function(result) {
@@ -105,6 +151,6 @@
       }
     });
   });
-  </script>
+</script>
 
 <% include ./partials/footer.ejs %>
