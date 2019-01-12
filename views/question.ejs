@@ -17,12 +17,12 @@
       <div class="col-7" id="midCol">
         <div class="titleWrapper">
           <p style="display: inline-block; font-family:Open Sans; font-size: 25px; 
-                    font-weight: 400; margin-left: 30px; padding-top: 15px; height: 50%; ">
+                    font-weight: 400; padding-top: 15px; height: 50%; ">
             <%= question.get('title'); %>
           </p>
         </div>
-        <div style="border-bottom: 1px solid #e4e4e4; overflow: hidden;">
-          <div class="questionBody">
+        <div style="overflow: hidden;">
+          <div class="questionBody" style="padding-left: 20px;">
             <div class="voteArea">
               <div class="upTriangle questionUpTriangle"></div>
               <p class="voteNumber questionVote"><%= question.get('upVotes'); %></p>
@@ -37,19 +37,34 @@
               <% }); %>
             </div>
           <% } %>
-          <div class="author">
-            <p class="timeStampQuestion">Asked</p>
-            <div class="authorInfo" style="overflow: hidden; padding-left: 5px;">
-              <img style="width: 40px; height: 40px; cursor: pointer;" src="<%= question.get('user').get('profilePhoto80').url() %>">
-              <div style="display: inline-block; vertical-align: top;">
-                <p class="authorName"><%= question.get('user').get('nickName') %></p>
-                <p class="reputation"><%= question.get('user').get('reputation') %></p>
+          <div style="width:100%; height:75px; margin-top: 10px;">
+            <div class="author">
+              <p class="timeStampQuestion">Asked</p>
+              <div class="authorInfo" style="overflow: hidden; padding-left: 5px;">
+                <img style="width: 40px; height: 40px; cursor: pointer;" src="<%= question.get('user').get('profilePhoto80').url() %>">
+                <div style="display: inline-block; vertical-align: top;">
+                  <p class="authorName"><%= question.get('user').get('nickName') %></p>
+                  <p class="reputation"><%= question.get('user').get('reputation') %></p>
+                </div>
               </div>
             </div>
           </div>
+          <div class="commentSection">
+            <% questionComments.forEach((comment, index)=>{ %>
+              <div class="commentRow" <% if(index == 0){ %> style="border-top: 1px solid #e4e4e4;" <% } %> >
+                <p class="commentBody"><%= comment.get('commentBody') %></p>              
+              </div>
+            <% }); %>
+          </div>
         </div>
+
+        <% if (answers.length) { %>
+          <div class="answerNumber">
+            <% if (answers.length > 1) { %><h5><%= answers.length %> Answers</h5> <% } else { %> <h5>1 Answer</h5> <% } %>
+          </div>
+        <% } %>
         <% answers.forEach((answer, index)=>{ %>
-          <div style="border-bottom: 1px solid #e4e4e4; overflow: hidden;">
+          <div style="margin-left: 20px; border-bottom: 1px solid #e4e4e4; overflow: hidden;">
             <div class="questionBody">
               <div class="voteArea">
                 <div class="upTriangle answerUpTriangle<%= index %>"></div>
@@ -58,15 +73,24 @@
               </div>
               <div class="bodyView" id="answerView<%= index %>" style="border-style: none;"></div>
             </div>
-            <div class="author">
-              <p class="timeStampQuestion timeStampAnswer<%= index %>">Answered</p>
-              <div class="authorInfo" style="overflow: hidden; padding-left: 5px;">
-                <img style="width: 40px; height: 40px; cursor: pointer;" src="<%= answer.answer.get('author').get('profilePhoto80').url() %>">
-                <div style="display: inline-block; vertical-align: top;">
-                  <p class="authorName"><%= answer.answer.get('author').get('nickName') %></p>
-                  <p class="reputation"><%= answer.answer.get('author').get('reputation') %></p>
+            <div style="width:100%; height:75px; margin-top: 10px;">
+              <div class="author">
+                <p class="timeStampQuestion timeStampAnswer<%= index %>">Answered</p>
+                <div class="authorInfo" style="overflow: hidden; padding-left: 5px;">
+                  <img style="width: 40px; height: 40px; cursor: pointer;" src="<%= answer.answer.get('author').get('profilePhoto80').url() %>">
+                  <div style="display: inline-block; vertical-align: top;">
+                    <p class="authorName"><%= answer.answer.get('author').get('nickName') %></p>
+                    <p class="reputation"><%= answer.answer.get('author').get('reputation') %></p>
+                  </div>
                 </div>
               </div>
+            </div>
+            <div class="commentSection">
+              <% answer.comments.forEach((comment, index)=>{ %>
+                <div class="commentRow" <% if(index == 0){ %> style="border-top: 1px solid #e4e4e4;" <% } %> >
+                  <p class="commentBody"><%= comment.get('commentBody') %></p>              
+                </div>
+              <% }); %>
             </div>
           </div>
         <% }); %>

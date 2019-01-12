@@ -272,6 +272,7 @@
 
 .titleWrapper {
   border-bottom: 1px solid #e4e4e4;
+  margin-left: 20px;
 }
 
 .voteArea {
@@ -282,7 +283,6 @@
 }
 
 .questionBody {
-  padding-left: 15px;
   overflow: hidden;
 }
 
@@ -333,10 +333,9 @@
 }
 
 .author {
+  /*background-color: rgb(225, 236, 244); */
   width: 200px;
-  margin-top: 10px;
   float: right;
-  display: block;
   padding-right: 20px;
   padding-bottom: 10px;
 }
@@ -397,4 +396,33 @@
 .tag:hover {
   background-color: rgb(205, 224, 237);
   border-color: rgb(205, 224, 237);
+}
+
+.answerNumber {
+  border-bottom: 1px solid #e4e4e4; 
+  margin-left: 20px;
+  font-family: Open Sans; 
+  font-size: 15px; 
+  font-weight: 400;
+  margin-top: 20px;
+}
+
+.commentSection {
+  margin-top: 10px;
+  padding-left: 80px;
+  padding-bottom: 10px;
+}
+
+.commentRow {
+  border-bottom: 1px solid #e4e4e4; 
+}
+
+.commentBody {
+  word-wrap: break-word;
+  margin-bottom: 0px;
+  font-family: Open Sans; 
+  font-size: 13px; 
+  font-weight: 400;
+  padding-bottom: 5px;
+  padding-top: 5px;
 }
