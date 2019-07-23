@@ -48,8 +48,11 @@ router.get('/register', function(req, res) {
 });
 
 router.get('/logout', function(req, res) {
-  req.session = null;
-  res.redirect('back');
+  Parse.User.logOut().then(() => {
+    req.session = null;
+    res.locals.currentUser = null;
+    res.redirect('back');
+  });
 });
 
 router.get('/ask', function(req, res) {

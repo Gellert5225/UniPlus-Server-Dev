@@ -69,7 +69,7 @@
               <div class="voteArea">
                 <div class="upTriangle answerUpTriangle<%= index %>"></div>
                 <p class="voteNumber answerVote<%= index %>"><%= answer.answer.get('upVotes'); %></p>
-                <div class="downTriangle answerDownTriangle<%= index %>"></div>
+                <div class="downTriangle answer DownTriangle<%= index %>"></div>
               </div>
               <div class="bodyView" id="answerView<%= index %>" style="border-style: none;"></div>
             </div>
@@ -155,6 +155,7 @@
       });
     };
 
+    <% if (currentUser) { %>
     var updateFeed = function(vote, voteType, toUserId, objectId, objectType) {
       console.log(objectType);
       if (voteType == 'newUpVote' || voteType == 'newDownVote') {
@@ -439,6 +440,7 @@
         updateVote(voteDelta, <%= answer.answer.get('upVotes') %>, "Answers", "<%= answer.answer.id %>");
       });
     <% }); %>
+    <% } %>
   </script>
 
   <script>
