@@ -94,6 +94,15 @@
             </div>
           </div>
         <% }); %>
+
+        <div class="provideAnswerSection">
+          <h5 style="margin-top: 20px;">Your Answer</h5>
+          <br>
+          <div id="answerEditor" style="height: 300px; border-bottom-left-radius: 5px; border-bottom-right-radius: 5px;">
+          </div>
+          <br>
+        </div>
+
       </div>
       <div class="col" id="rightCol">
         3 of 3
@@ -101,7 +110,7 @@
     </div>
   </div>
 
-  <div id="sample" style="display: none;">
+  <div id="questionBody" style="display: none;">
     <%= question.get('bodyRaw'); %>
   </div>
 
@@ -135,14 +144,16 @@
     if ('<%= currentUserVoteStat %>' == 'upVote') $('.questionUpTriangle').css({'border-bottom-color': 'rgb(42, 100, 166)'});
     else if ('<%= currentUserVoteStat %>' == 'downVote') $('.questionDownTriangle').css({'border-top-color': 'rgb(42, 100, 166)'});
 
-    var updateReputation = function(reputationDelta, currentRep, userId) {
-      $.ajax({
-        type: 'put',
-        headers: {
+    var httpHeader = {
             'X-Parse-Application-Id': "Zj9b976AHw3b7SkOgCKzaEjB7bjJoPh2XcyxTcgU",
             "X-Parse-REST-API-Key": "restkey",
             'X-Parse-Master-Key': "T5DQ2mT8LNAp0Enn9Y3ERU0iY93sT06PctF6Dt4g"
-        },
+        };
+
+    var updateReputation = function(reputationDelta, currentRep, userId) {
+      $.ajax({
+        type: 'put',
+        headers: httpHeader,
         url: "/parse/users/" + userId,
         data: JSON.stringify({"reputation" : currentRep + reputationDelta}),
         contentType: "application/json; charset=utf-8",
@@ -179,11 +190,7 @@
         }
         $.ajax({
           type: 'post',
-          headers: {
-              'X-Parse-Application-Id': "Zj9b976AHw3b7SkOgCKzaEjB7bjJoPh2XcyxTcgU",
-              "X-Parse-REST-API-Key": "restkey",
-              'X-Parse-Master-Key': "T5DQ2mT8LNAp0Enn9Y3ERU0iY93sT06PctF6Dt4g"
-          },
+          headers: httpHeader,
           url: "/parse/classes/Feeds",
           data: JSON.stringify(jsonString),
           contentType: "application/json; charset=utf-8",
@@ -192,11 +199,7 @@
             console.log('posted a feed ' + e.objectId);
             $.ajax({
               type: 'put',
-              headers: {
-                  'X-Parse-Application-Id': "Zj9b976AHw3b7SkOgCKzaEjB7bjJoPh2XcyxTcgU",
-                  "X-Parse-REST-API-Key": "restkey",
-                  'X-Parse-Master-Key': "T5DQ2mT8LNAp0Enn9Y3ERU0iY93sT06PctF6Dt4g"
-              },
+              headers: httpHeader,
               url: "/parse/classes/" + objectType + "/" + objectId,
               data: JSON.stringify({"votes": {"__op": "AddRelation", "objects":[{"__type":"Pointer","className":"Feeds","objectId":e.objectId}]}}),
               contentType: "application/json; charset=utf-8",
@@ -238,11 +241,7 @@
         }
         $.ajax({
           type: 'get',
-          headers: {
-              'X-Parse-Application-Id': "Zj9b976AHw3b7SkOgCKzaEjB7bjJoPh2XcyxTcgU",
-              "X-Parse-REST-API-Key": "restkey",
-              'X-Parse-Master-Key': "T5DQ2mT8LNAp0Enn9Y3ERU0iY93sT06PctF6Dt4g"
-          },
+          headers: httpHeader,
           url: "/parse/classes/Feeds?",
           data: "where=" + escape(JSON.stringify(jsonString)),
           processData: false,
@@ -253,11 +252,7 @@
               if ((voteType == 'upVote' && vote == -1) || (voteType == 'downVote' && vote == 1)) {
                 $.ajax({
                   type: 'delete',
-                  headers: {
-                      'X-Parse-Application-Id': "Zj9b976AHw3b7SkOgCKzaEjB7bjJoPh2XcyxTcgU",
-                      "X-Parse-REST-API-Key": "restkey",
-                      'X-Parse-Master-Key': "T5DQ2mT8LNAp0Enn9Y3ERU0iY93sT06PctF6Dt4g"
-                  },
+                  headers: httpHeader,
                   url: "/parse/classes/Feeds/" + array[0].objectId,
                   success: function(d) {
                     console.log('deleted feed');
@@ -268,11 +263,7 @@
               } else if ((voteType == 'upVote' && vote == 2) || (voteType == 'downVote' && vote == -2)) {
                 $.ajax({
                   type: 'put',
-                  headers: {
-                      'X-Parse-Application-Id': "Zj9b976AHw3b7SkOgCKzaEjB7bjJoPh2XcyxTcgU",
-                      "X-Parse-REST-API-Key": "restkey",
-                      'X-Parse-Master-Key': "T5DQ2mT8LNAp0Enn9Y3ERU0iY93sT06PctF6Dt4g"
-                  },
+                  headers: httpHeader,
                   data: voteType == 'upVote' ? JSON.stringify({"type" : "upVote"}) : JSON.stringify({"type" : "downVote"}),
                   contentType: "application/json; charset=utf-8",
                   dataType: "json",
@@ -296,11 +287,7 @@
     var updateVote = function(voteDelta, currentVote, parseClass, objectId) {
       $.ajax({
         type: 'put',
-        headers: {
-            'X-Parse-Application-Id': "Zj9b976AHw3b7SkOgCKzaEjB7bjJoPh2XcyxTcgU",
-            "X-Parse-REST-API-Key": "restkey",
-            'X-Parse-Master-Key': "T5DQ2mT8LNAp0Enn9Y3ERU0iY93sT06PctF6Dt4g"
-        },
+        headers: httpHeader,
         url: "/parse/classes/"+ parseClass + "/" + objectId,
         data: JSON.stringify({"upVotes" : currentVote + voteDelta}),
         contentType: "application/json; charset=utf-8",
@@ -444,6 +431,34 @@
   </script>
 
   <script>
+    var toolbarOptions = [
+      ['bold', 'italic', 'underline', 'strike'],        // toggled buttons
+      ['blockquote', 'code-block'],
+
+      [{ 'header': 1 }, { 'header': 2 }],               // custom button values
+      [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+      [{ 'script': 'sub'}, { 'script': 'super' }],      // superscript/subscript
+      [{ 'indent': '-1'}, { 'indent': '+1' }],          // outdent/indent
+
+      [{ 'align': [] }],
+
+      ['image']
+    ];
+
+    var icons = Quill.import('ui/icons');
+    icons['codeBlock'] = '<img src="../public/assets/images/codeBlock.png">';
+
+    var quill = new Quill('#answerEditor', {
+      modules: {
+        toolbar: toolbarOptions
+      },
+      theme: 'snow',
+      placeholder: 'Compose your answer...'
+    });
+
+  </script>
+
+  <script>
     var quill = new Quill('#editor', {
       modules: {
         toolbar: null
@@ -453,7 +468,7 @@
     quill.enable(false);
 
     $(document).ready(function() {
-      var text = $('#sample').text();
+      var text = $('#questionBody').text();
       quill.root.innerHTML = text.substring(5, text.length - 3);
     });
 
@@ -478,7 +493,7 @@
         const utc2 = Date.UTC(now.getFullYear(), now.getMonth(), now.getDate());
         var hourDiff = Math.floor((utc2 - utc1) / _MS_PER_HOUR);
         var secondDiff = Math.floor((utc2 - utc1) / 1000);
-
+  
         var localDateHM = date.toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: false });
         var localDateFull = date.toLocaleDateString("en-US", { year: 'numeric', month: 'long', day: 'numeric' });
 
