@@ -64,7 +64,10 @@
           </div>
         <% } %>
         <% answers.forEach((answer, index)=>{ %>
-          <div style="margin-left: 20px; border-bottom: 1px solid #e4e4e4; overflow: hidden;">
+          <div id="answerBody<%= index %>" style="display: none;">
+            <%= answer.answer.get('body') %>
+          </div>
+          <div style="padding-left: 20px; border-top: 1px solid #e4e4e4; overflow: hidden;">
             <div class="questionBody">
               <div class="voteArea">
                 <div class="upTriangle answerUpTriangle<%= index %>"></div>
@@ -85,7 +88,7 @@
                 </div>
               </div>
             </div>
-            <div class="commentSection">
+            <div class="commentSection" style="padding-left:60px;">
               <% answer.comments.forEach((comment, index)=>{ %>
                 <div class="commentRow" <% if(index == 0){ %> style="border-top: 1px solid #e4e4e4;" <% } %> >
                   <p class="commentBody"><%= comment.get('commentBody') %></p>              
@@ -101,6 +104,11 @@
           <div id="answerEditor" style="height: 300px; border-bottom-left-radius: 5px; border-bottom-right-radius: 5px;">
           </div>
           <br>
+          <div>
+            <button type="submit" class="btn btn-primary" id="postAnswerBtn">
+              Post Your Answer
+            </button>
+          </div>
         </div>
 
       </div>
@@ -148,7 +156,47 @@
             'X-Parse-Application-Id': "Zj9b976AHw3b7SkOgCKzaEjB7bjJoPh2XcyxTcgU",
             "X-Parse-REST-API-Key": "restkey",
             'X-Parse-Master-Key': "T5DQ2mT8LNAp0Enn9Y3ERU0iY93sT06PctF6Dt4g"
-        };
+    };
+
+    // post answer
+    $('#postAnswerBtn').click(function(){
+      <% if (currentUser) { %>
+        var body = $('.provideAnswerSection .ql-editor').html();
+        $.ajax({
+          type: 'post',
+          headers: httpHeader,
+          url: "/parse/classes/Answers",
+          data: JSON.stringify({"author": {"__type":"Pointer","className":"_User","objectId":"<%= currentUser.id %>"},
+                                "toQuestion": {"__type":"Pointer","className":"Questions","objectId":"<%= question.id %>"},
+                                "upVotes": 0,
+                                "bodyRaw": body,
+                                "body": body}),
+          contentType: "application/json; charset=utf-8",
+          dataType: "json",
+          success: function(result) {
+            console.log('Posted an answer ' + result.objectId);
+            $.ajax({
+              type: 'put',
+              headers: httpHeader,
+              url: "/parse/classes/Questions/<%= question.id %>",
+              data: JSON.stringify({"answers": {"__op": "AddRelation", "objects":[{"__type":"Pointer","className":"Answers","objectId":result.objectId}]}}),
+              contentType: "application/json; charset=utf-8",
+              dataType: "json",
+              success: function(f) {
+                console.log('saved answer ' + result.objectId + ' to question' + ': <%= question.id %> ' + JSON.stringify(f));
+                location.reload();
+              },error: function (xhr, status, error) {
+                console.log('Error: ' + error);
+              }
+            });
+          }, error: function (xhr, status, error) {
+            console.log(error);
+          }
+        });
+      <%} else {%> 
+        alert('You need to login to post an answer');
+      <%}%>
+    });
 
     var updateReputation = function(reputationDelta, currentRep, userId) {
       $.ajax({
@@ -473,17 +521,20 @@
     });
 
     <% answers.forEach((answer, index)=>{ %>
+    console.log(<%= index %>);
       if ('<%= answer.currentUserVote %>' == 'upVote') $('.answerUpTriangle<%= index %>').css({'border-bottom-color': 'rgb(42, 100, 166)'});
       else if ('<%= answer.currentUserVote %>' == 'downVote') $('.answerDownTriangle<%= index %>').css({'border-top-color': 'rgb(42, 100, 166)'});
-      var quillAnswer = new Quill('#answerView'+'<%= index %>', {
+      var quillAnswer = new Quill('#answerView<%= index %>', {
         modules: {
           toolbar: null
         },
         theme: 'snow'
       });
       quillAnswer.enable(false);
-      quillAnswer.root.innerHTML = `<%= answer.answer.get('body') %>`;
-
+      
+      var text = $('#answerBody<%= index %>').text();
+      quillAnswer.root.innerHTML = text.substring(13, text.length - 10);
+      
       $(document).ready(function() {
         const _MS_PER_HOUR = 1000 * 60 * 60;
 
